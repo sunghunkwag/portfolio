@@ -186,35 +186,33 @@ body {
 
 
 /* Animations */
-/* Kinetic Typography Character Class */
+/* Kinetic Typography Character Class (Updated for Soft Blur) */
 .char-span {
     display: inline-block;
     opacity: 0;
-    /* Initial State: Blown out and invisible */
-    transform: scale(1.5) translateY(10px);
-    filter: blur(10px);
+    /* Initial State: Blurry and ethereal */
+    filter: blur(20px);
+    transform: translateY(5px);
 
-    /* Monospace-ish spacing tweak if needed, but standard font is fine */
     min-width: 0.3em;
-    /* Slight stability for spaces */
     white-space: pre;
-    /* Preserve spaces */
 }
 
-/* Kinetic Reveal Keyframes */
-@keyframes kineticReveal {
+/* Soft Blur Reveal Keyframes - Smooth, Mist-like Logic */
+@keyframes softBlurReveal {
     0% {
         opacity: 0;
-        transform: scale(2) translateY(20px);
         filter: blur(20px);
+        transform: translateY(10px);
     }
 
     100% {
         opacity: 1;
-        transform: scale(1) translateY(0);
         filter: blur(0);
+        transform: translateY(0);
     }
 }
+
 
 /* Initially hidden */
 .fade-in-1,

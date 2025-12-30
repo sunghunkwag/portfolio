@@ -23,19 +23,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             span.classList.add('char-span');
 
-            // Rapid Stagger for "Typing" feel
-            const interval = 0.05; // 50ms per char - fast and fluid
+            // Dense Stagger for liquid flow
+            const interval = 0.08;
             const delay = baseDelay + (index * interval);
 
-            // Kinetic Reveal: 0.8s duration
-            span.style.animation = `kineticReveal 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards`;
+            // Soft Blur Reveal: 2.0s duration (Very Slow & Soft)
+            span.style.animation = `softBlurReveal 2.0s cubic-bezier(0.16, 1, 0.3, 1) forwards`;
             span.style.animationDelay = `${delay}s`;
 
             element.appendChild(span);
         });
 
         // Return finish time
-        return baseDelay + (chars.length * 0.05) + 0.8;
+        return baseDelay + (chars.length * 0.08) + 2.0;
     }
 
     // -------------------------------------------------------------------------
