@@ -1,0 +1,10 @@
+# Python scripts
+*.py
+__pycache__/
+
+# Large/Raw Video Files (Keep background.mp4 but ignore others)
+*.ts
+snapshot.jpg
+menlo_background.mp4
+menlo_background_full.ts
+menlo_background_zoomed.ts
