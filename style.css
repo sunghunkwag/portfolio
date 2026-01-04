@@ -76,18 +76,30 @@ body {
     text-transform: uppercase;
     margin-bottom: 20px;
 
-    /* CLEAN WHITE STYLE */
-    color: #FFFFFF;
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
-    /* Strong shadow for readability */
+    /* GOLDEN GRADIENT STYLE */
+    background-image: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    /* Fallback */
 
-    background: none;
-    -webkit-background-clip: unset;
-    -webkit-text-fill-color: initial;
-    filter: none;
+    /* Subtle Glow for Gold Effect */
+    filter: drop-shadow(0 0 10px rgba(191, 149, 63, 0.3));
 
     opacity: 0;
     /* Hidden initially, controlled by animation */
+
+    /* Slight shine movement */
+    animation: shine 5s linear infinite;
+}
+
+/* Shine Animation for the Gradient */
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
 }
 
 /* Re-enable Standard Fade Animation */
@@ -203,13 +215,14 @@ body {
     0% {
         opacity: 0;
         filter: blur(20px);
-        transform: translateY(10px);
+        transform: scale(1.1) translateY(10px);
+        /* Added scale for cinematic feel */
     }
 
     100% {
         opacity: 1;
         filter: blur(0);
-        transform: translateY(0);
+        transform: scale(1) translateY(0);
     }
 }
 
