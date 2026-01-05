@@ -87,37 +87,50 @@ body {
 }
 
 /* 
-   CLEAN CINEMATIC CHARACTER STYLE
-   Simple, high-quality white text.
+   CLEAN CINEMATIC WORD STYLE
+   High-quality white text, fading in word by word.
 */
-.char-span {
+.word-span {
     display: inline-block;
     opacity: 0;
     /* Hidden initially */
-    transform: translateY(20px);
-    filter: blur(10px);
+    transform: translateY(40px);
+    filter: blur(15px);
+    margin-right: 0.25em;
+    /* Space between words */
 
     color: #ffffff;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    /* Subtle depth shadow */
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+    /* Deep, soft shadow */
 
+    will-change: opacity, transform, filter;
+}
+
+/* Legacy Char Span for Names */
+.char-span-legacy {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(5px);
+    color: #ffffff;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     min-width: 0.3em;
     will-change: opacity, transform, filter;
 }
 
 /* 
-   ANIMATION: Smooth Cinematic Fade Up
+   ANIMATION: Smooth Cinematic Word Reveal
 */
-@keyframes cinematicFadeUp {
+@keyframes cinematicWordFadeUp {
     0% {
         opacity: 0;
-        transform: translateY(30px);
-        filter: blur(10px);
+        transform: translateY(40px) scale(0.95);
+        filter: blur(15px);
     }
 
     100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
         filter: blur(0);
     }
 }

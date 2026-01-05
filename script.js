@@ -2,15 +2,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* 
        KINETIC TYPOGRAPHY ENGINE
-       Splits text into characters and animates them with a "Kinetic Reveal"
-       (Scale + Blur + Fade) heavily staggered.
     */
 
+    // 1. Word-by-Word Animation (High Quality Cinematic)
+    function animateWords(element, baseDelay) {
+        const text = element.textContent.trim();
+        element.innerHTML = "";
+
+        // Word Split
+        const words = text.split(/\s+/); // Split by any whitespace
+
+        let totalDuration = 0;
+
+        words.forEach((word, index) => {
+            const span = document.createElement('span');
+            span.textContent = word;
+            span.classList.add('word-span');
+
+            // Slow, deliberate stagger for "Statement" feel
+            const interval = 0.4;
+            const delay = baseDelay + (index * interval);
+
+            // Long, smooth duration
+            span.style.animation = `cinematicWordFadeUp 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`;
+            span.style.animationDelay = `${delay}s`;
+
+            element.appendChild(span);
+        });
+
+        // Return finish time for chaining
+        return baseDelay + (words.length * 0.4) + 1.5;
+    }
+
+    // 2. Character-by-Character Animation (For names, simpler)
     function animateCharacters(element, baseDelay) {
         const text = element.textContent.trim();
         element.innerHTML = "";
 
-        // Character Split
         const chars = text.split("");
 
         chars.forEach((char, index) => {
@@ -21,49 +49,55 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 span.textContent = char;
             }
-            span.classList.add('char-span');
+            // Reuse old simplified style if needed, or define a simpler char sytle.
+            // But we deleted .char-span styles above? 
+            // WAIT -> We need to ensure .char-span styles exist OR reuse .word-span styles tailored.
+            // Let's actually RE-ADD a small char-span style in JS or CSS?
+            // Actually, for consistency, let's just re-use the concept but inject styles dynamically 
+            // OR assumes we didn't delete .char-span completely?
+            // Checking plan: I replaced .char-span with .word-span in CSS.
+            // BAD MOVE. I should have KEPT .char-span for the names.
+            // Correcting via inline styles to save a roundtrip, or better yet, I'll fix CSS in next step.
 
-            // Dense Stagger for liquid flow
-            const interval = 0.08;
+            // For now, let's use a class 'char-span-legacy' and I will fix CSS immediately after.
+            span.classList.add('char-span-legacy');
+
+            const interval = 0.05;
             const delay = baseDelay + (index * interval);
 
-            // Cinematic Fade Up: Clean and smooth
-            // Using a slightly longer duration for "gradual" feel
-            span.style.animation = `cinematicFadeUp 2.0s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`;
+            span.style.opacity = '0';
+            span.style.display = 'inline-block';
+            span.style.animation = `cinematicWordFadeUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`; // Recycle keyframe
             span.style.animationDelay = `${delay}s`;
-
-            element.appendChild(span);
 
             element.appendChild(span);
         });
 
-        // Return finish time
-        return baseDelay + (chars.length * 0.08) + 2.0;
+        return baseDelay + (chars.length * 0.05) + 1.5;
     }
 
     // -------------------------------------------------------------------------
-    // 1. Kinetic Typography Sequence
+    // Sequence Execution
     // -------------------------------------------------------------------------
 
-    // A. Main Title: "Advanced AI Research"
+    // A. Main Title: "Advanced AI System" -> Word by Word
     const title = document.querySelector('.main-title');
-    // Ensure opacity 1 for container so children span animations are visible
     title.style.opacity = '1';
-    title.style.animation = 'none'; // Disable container fade
+    title.style.animation = 'none';
 
-    const titleFinish = animateCharacters(title, 0.5);
+    // Start after small initial pause
+    const titleFinish = animateWords(title, 0.5);
 
-    // B. English Name: "Sung Hun Kwag"
+    // B. English Name: "Sung Hun Kwag" -> Char by Char (Fast flow)
     const engName = document.querySelector('.eng-name');
-    animateCharacters(engName, titleFinish - 0.2); // Overlap slightly for flow
+    animateCharacters(engName, titleFinish - 0.5); // Start before title fully fades out? No, overlap nicely.
 
-    // C. Separator & Korean Name (Simple fade or char based? Let's do all char for consistency)
+    // C. Separator & Korean Name
     const separator = document.querySelector('.separator');
     const korName = document.querySelector('.kor-name');
 
-    // Manual handling for vertical separator if needed, but char split works fine
-    animateCharacters(separator, titleFinish + 0.5);
-    animateCharacters(korName, titleFinish + 0.8);
+    animateCharacters(separator, titleFinish + 0.2);
+    animateCharacters(korName, titleFinish + 0.4);
 
     // -------------------------------------------------------------------------
     // 2. Interactive Background Effects
