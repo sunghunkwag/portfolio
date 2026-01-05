@@ -27,9 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const interval = 0.08;
             const delay = baseDelay + (index * interval);
 
-            // Soft Blur Reveal: 3.0s duration (Very Slow & Soft)
-            span.style.animation = `softBlurReveal 3.0s cubic-bezier(0.16, 1, 0.3, 1) forwards`;
+            // Cinematic Fade Up: Clean and smooth
+            // Using a slightly longer duration for "gradual" feel
+            span.style.animation = `cinematicFadeUp 2.0s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`;
             span.style.animationDelay = `${delay}s`;
+
+            element.appendChild(span);
 
             element.appendChild(span);
         });

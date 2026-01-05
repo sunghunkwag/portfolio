@@ -68,48 +68,59 @@ body {
     margin-bottom: 50px;
 }
 
+/* Main Hero Title - Container */
 .main-title {
     font-family: 'Cinzel', serif;
-    font-size: 4rem;
+    font-size: 5rem;
+    /* Increased size for impact */
     font-weight: 700;
-    letter-spacing: 5px;
+    letter-spacing: 8px;
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    position: relative;
 
-    /* GOLDEN GRADIENT STYLE */
-    background-image: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
-    background-size: 200% auto;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    /* Fallback */
-
-    /* Subtle Glow for Gold Effect */
-    filter: drop-shadow(0 0 10px rgba(191, 149, 63, 0.3));
-
-    opacity: 0;
-    /* Hidden initially, controlled by animation */
-
-    /* Slight shine movement */
-    animation: shine 5s linear infinite;
+    color: #ffffff;
+    /* Fallback for layout */
+    display: block;
+    /* Ensure block layout */
+    /* Removed perspective/3d for cleaner look */
 }
 
-/* Shine Animation for the Gradient */
-@keyframes shine {
-    to {
-        background-position: 200% center;
+/* 
+   CLEAN CINEMATIC CHARACTER STYLE
+   Simple, high-quality white text.
+*/
+.char-span {
+    display: inline-block;
+    opacity: 0;
+    /* Hidden initially */
+    transform: translateY(20px);
+    filter: blur(10px);
+
+    color: #ffffff;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    /* Subtle depth shadow */
+
+    min-width: 0.3em;
+    will-change: opacity, transform, filter;
+}
+
+/* 
+   ANIMATION: Smooth Cinematic Fade Up
+*/
+@keyframes cinematicFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+        filter: blur(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
     }
 }
-
-/* Re-enable Standard Fade Animation */
-.fade-in-1 {
-    animation: fadeInUp 1.5s ease-out forwards;
-    animation-delay: 1.0s;
-}
-
-/* (Word Animation Classes & Keyframes Removed) */
-/* (Shine Animation Removed) */
 
 .name-container {
     display: flex;
@@ -198,33 +209,10 @@ body {
 
 
 /* Animations */
-/* Kinetic Typography Character Class (Updated for Soft Blur) */
-.char-span {
-    display: inline-block;
-    opacity: 0;
-    /* Initial State: Blurry and ethereal */
-    filter: blur(20px);
-    transform: translateY(5px);
-
-    min-width: 0.3em;
-    white-space: pre;
-}
-
-/* Soft Blur Reveal Keyframes - Smooth, Mist-like Logic */
-@keyframes softBlurReveal {
-    0% {
-        opacity: 0;
-        filter: blur(20px);
-        transform: scale(1.1) translateY(10px);
-        /* Added scale for cinematic feel */
-    }
-
-    100% {
-        opacity: 1;
-        filter: blur(0);
-        transform: scale(1) translateY(0);
-    }
-}
+/* 
+   Previous simple keyframes removed. 
+   We now use 'cinematicGoldReveal' defined in the Main Title section.
+*/
 
 
 /* Initially hidden */
