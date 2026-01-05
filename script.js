@@ -26,14 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 span.textContent = char;
                 span.classList.add('kinetic-char');
 
-                // Typing Speed (fast)
-                const typeSpeed = 0.08;
-                span.style.animation = `cinematicWordFadeUp 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards`;
-                span.style.animationDelay = `${currentDelay}s`;
-
+                // Snappy but smooth 3D reveal
+                if (char !== " ") {
+                    // Using 'comicalBounce' for the elastic effect
+                    span.style.animation = `comicalBounce 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards`;
+                    span.style.animationDelay = `${currentDelay}s`;
+                }
                 element.appendChild(span);
 
                 // Increment delay for next character
+                const typeSpeed = 0.08;
                 currentDelay += typeSpeed;
             });
 

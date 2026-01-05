@@ -88,8 +88,8 @@ body {
 }
 
 /* 
-   CLEAN CINEMATIC CHARACTER STYLE (KINETIC)
-   High-quality white text, fading in character by character.
+   COMICAL BOUNCY STYLE (KINETIC)
+   Playful, elastic, sharp text.
 */
 .kinetic-char {
     display: inline-block;
@@ -97,17 +97,15 @@ body {
     /* Hidden initially */
     transform-origin: 50% 100%;
     /* Anchor rotation at bottom */
-    transform: translateY(40px) rotateX(-90deg);
-    filter: blur(20px);
-
-    /* Removed margin-right for characters */
+    transform: scale(0);
+    /* Start hidden/small */
 
     color: #ffffff;
-    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
-    /* Deep, soft shadow */
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    /* Lighter shadow for cartoon feel */
 
-    will-change: opacity, transform, filter;
-    transform-style: preserve-3d;
+    will-change: opacity, transform;
+    /* Blur removed for sharp cartoon look */
 }
 
 /* Legacy Char Span for Names */
@@ -123,19 +121,36 @@ body {
 }
 
 /* 
-   ANIMATION: Smooth Cinematic Character Reveal (Kinetic 3D)
+   ANIMATION: Comical Elastic Bounce
+   "Boing!" effect.
 */
-@keyframes cinematicWordFadeUp {
+@keyframes comicalBounce {
     0% {
         opacity: 0;
-        transform: translateY(60px) rotateX(-90deg) scale(0.8);
-        filter: blur(20px);
+        transform: translateY(-50px) scale(0.3);
+    }
+
+    30% {
+        /* Hit floor */
+        opacity: 1;
+        transform: translateY(0) scale(1.4, 0.7);
+        /* Squash */
+    }
+
+    50% {
+        /* Rebound */
+        transform: translateY(-10px) scale(0.9, 1.1);
+        /* Stretch */
+    }
+
+    70% {
+        /* Settle */
+        transform: translateY(0) scale(1.05, 0.95);
     }
 
     100% {
         opacity: 1;
-        transform: translateY(0) rotateX(0deg) scale(1);
-        filter: blur(0);
+        transform: translateY(0) scale(1, 1);
     }
 }
 
