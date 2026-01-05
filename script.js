@@ -4,42 +4,53 @@ document.addEventListener('DOMContentLoaded', () => {
        KINETIC TYPOGRAPHY ENGINE
     */
 
-    // 1. Kinetic Character Animation (High Quality 3D Typewriter)
+    // 1. Kinetic Character Animation (Word-Grouped Typewriter)
+    // "Advanced" (type-type-type) -> PAUSE -> "AI" (type-type) -> PAUSE -> "System" (type-type-type)
     function animateKineticChars(element, baseDelay) {
         const text = element.textContent.trim();
         element.innerHTML = "";
 
-        // Split by character
-        const chars = text.split("");
+        // 1. Split into Words first to respect "One Word at a Time"
+        const words = text.split(/\s+/);
 
-        chars.forEach((char, index) => {
-            const span = document.createElement('span');
+        let currentDelay = baseDelay;
 
-            if (char === " ") {
-                span.innerHTML = "&nbsp;";
-                // Minimal display for space to ensure flow
-                span.style.display = "inline-block";
-            } else {
+        words.forEach((word, wordIndex) => {
+            // Create a wrapper for the word (optional, but helps semantic grouping) 
+            // - decided to keep flat spans for layout stability but calculate timing in groups.
+
+            const chars = word.split("");
+
+            chars.forEach((char, charIndex) => {
+                const span = document.createElement('span');
                 span.textContent = char;
-                span.classList.add('kinetic-char'); // Use new class
+                span.classList.add('kinetic-char');
+
+                // Typing Speed (fast)
+                const typeSpeed = 0.08;
+                span.style.animation = `cinematicWordFadeUp 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards`;
+                span.style.animationDelay = `${currentDelay}s`;
+
+                element.appendChild(span);
+
+                // Increment delay for next character
+                currentDelay += typeSpeed;
+            });
+
+            // Add Space after word (except last one)
+            if (wordIndex < words.length - 1) {
+                const spaceSpan = document.createElement('span');
+                spaceSpan.innerHTML = "&nbsp;";
+                spaceSpan.style.display = "inline-block";
+                element.appendChild(spaceSpan);
+
+                // IMPORTANT: Add "Group Pause" after playing a word
+                // This makes it feel like "One Word... then Next Word..."
+                currentDelay += 0.8;
             }
-
-            // "Tak, Tak, Tak" Timing
-            // Fast interval for typing feel
-            const interval = 0.12;
-            const delay = baseDelay + (index * interval);
-
-            // Snappy but smooth 3D reveal
-            if (char !== " ") {
-                span.style.animation = `cinematicWordFadeUp 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards`;
-                span.style.animationDelay = `${delay}s`;
-            }
-
-            element.appendChild(span);
         });
 
-        // Return finish time
-        return baseDelay + (chars.length * 0.12) + 0.8;
+        return currentDelay + 1.0;
     }
 
     // 2. Character-by-Character Animation (For names, simpler)
