@@ -4,34 +4,42 @@ document.addEventListener('DOMContentLoaded', () => {
        KINETIC TYPOGRAPHY ENGINE
     */
 
-    // 1. Word-by-Word Animation (High Quality Cinematic)
-    function animateWords(element, baseDelay) {
+    // 1. Kinetic Character Animation (High Quality 3D Typewriter)
+    function animateKineticChars(element, baseDelay) {
         const text = element.textContent.trim();
         element.innerHTML = "";
 
-        // Word Split
-        const words = text.split(/\s+/); // Split by any whitespace
+        // Split by character
+        const chars = text.split("");
 
-        let totalDuration = 0;
-
-        words.forEach((word, index) => {
+        chars.forEach((char, index) => {
             const span = document.createElement('span');
-            span.textContent = word;
-            span.classList.add('word-span');
 
-            // Distinct sequential stagger (Word ..... Word ..... Word)
-            const interval = 1.0;
+            if (char === " ") {
+                span.innerHTML = "&nbsp;";
+                // Minimal display for space to ensure flow
+                span.style.display = "inline-block";
+            } else {
+                span.textContent = char;
+                span.classList.add('kinetic-char'); // Use new class
+            }
+
+            // "Tak, Tak, Tak" Timing
+            // Fast interval for typing feel
+            const interval = 0.12;
             const delay = baseDelay + (index * interval);
 
-            // Fast, snappy duration to finish before next word starts
-            span.style.animation = `cinematicWordFadeUp 1.0s cubic-bezier(0.19, 1, 0.22, 1) forwards`;
-            span.style.animationDelay = `${delay}s`;
+            // Snappy but smooth 3D reveal
+            if (char !== " ") {
+                span.style.animation = `cinematicWordFadeUp 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards`;
+                span.style.animationDelay = `${delay}s`;
+            }
 
             element.appendChild(span);
         });
 
-        // Return finish time for chaining
-        return baseDelay + (words.length * 0.4) + 1.5;
+        // Return finish time
+        return baseDelay + (chars.length * 0.12) + 0.8;
     }
 
     // 2. Character-by-Character Animation (For names, simpler)
@@ -86,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     title.style.animation = 'none';
 
     // Start after small initial pause
-    const titleFinish = animateWords(title, 0.5);
+    const titleFinish = animateKineticChars(title, 0.5);
 
     // B. English Name: "Sung Hun Kwag" -> Char by Char (Fast flow)
     const engName = document.querySelector('.eng-name');
