@@ -83,7 +83,8 @@ body {
     /* Fallback for layout */
     display: block;
     /* Ensure block layout */
-    /* Removed perspective/3d for cleaner look */
+    /* ADDED: Perspective for 3D Kinetic Effect */
+    perspective: 1000px;
 }
 
 /* 
@@ -94,8 +95,10 @@ body {
     display: inline-block;
     opacity: 0;
     /* Hidden initially */
-    transform: translateY(40px);
-    filter: blur(15px);
+    transform-origin: 50% 100%;
+    /* Anchor rotation at bottom */
+    transform: translateY(40px) rotateX(-90deg);
+    filter: blur(20px);
     margin-right: 0.25em;
     /* Space between words */
 
@@ -104,6 +107,7 @@ body {
     /* Deep, soft shadow */
 
     will-change: opacity, transform, filter;
+    transform-style: preserve-3d;
 }
 
 /* Legacy Char Span for Names */
@@ -119,7 +123,7 @@ body {
 }
 
 /* 
-   ANIMATION: Smooth Cinematic Word Reveal
+   ANIMATION: Smooth Cinematic Word Reveal (Kinetic 3D)
 */
 @keyframes cinematicWordFadeUp {
     0% {
