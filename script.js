@@ -19,12 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
             span.textContent = word;
             span.classList.add('word-span');
 
-            // Slow, deliberate stagger for "Statement" feel
-            const interval = 0.5; // Slightly slower stagger for impact
+            // Distinct sequential stagger (Word ..... Word ..... Word)
+            const interval = 1.0;
             const delay = baseDelay + (index * interval);
 
-            // Long, smooth duration with elastic easing
-            span.style.animation = `cinematicWordFadeUp 2.8s cubic-bezier(0.19, 1, 0.22, 1) forwards`;
+            // Fast, snappy duration to finish before next word starts
+            span.style.animation = `cinematicWordFadeUp 1.0s cubic-bezier(0.19, 1, 0.22, 1) forwards`;
             span.style.animationDelay = `${delay}s`;
 
             element.appendChild(span);
