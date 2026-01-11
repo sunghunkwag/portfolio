@@ -11,25 +11,409 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;500;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+
+    <!-- INLINED CSS TO FORCE UPDATE -->
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Background Neutral */
+        .bg-neutral {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Premium Deep Gradient: Creates depth/vignette instead of flat darkness */
+            background: radial-gradient(circle at center, #1f2937 0%, #000000 100%);
+            z-index: -1;
+        }
+
+        /* 3D Perspective Container - now Full Screen */
+        .full-screen-3d-stage {
+            perspective: 2500px;
+            /* Deeper perspective for full screen */
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            /* Visual Layer */
+            pointer-events: none;
+            /* CLICK THROUGH */
+        }
+
+        .title-plate-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            display: flex;
+            /* Slats fill this */
+            pointer-events: none;
+        }
+
+        /* STATIC TITLE for Final State (Perfect Crisp Text) */
+        .title-plate-static {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            /* Align to Top */
+            align-items: center;
+            padding-top: 15vh;
+            /* Position at the very top */
+            z-index: 101;
+            /* Above slats */
+            opacity: 0;
+            /* Starts hidden */
+            pointer-events: none;
+        }
+
+        /* Unified Sequence Animation: Seamless Takeover -> Hold -> Fade */
+        .title-plate-static.sequence-active {
+            animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes singleSequenceFade {
+            0% {
+                opacity: 1;
+                filter: blur(0px);
+                transform: scale(1);
+                letter-spacing: -2px;
+            }
+
+            20% {
+                /* Hold for a moment - Verified Timing */
+                opacity: 1;
+                filter: blur(0px);
+                transform: scale(1);
+            }
+
+            100% {
+                /* Simply stay visible */
+                opacity: 1;
+                filter: blur(0px);
+                transform: scale(1);
+                letter-spacing: -2px;
+                /* Match original shadow, no bloom */
+                text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            }
+        }
+
+        /* Reuse typography for static title */
+        .title-plate-static .plate-main-text {
+            font-size: 5vw;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            line-height: 1;
+            margin: 0;
+            color: #ffffff;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Computed Slat Styles - Massive Columns */
+        .slat {
+            height: 100%;
+            /* width set by JS */
+            position: relative;
+            /* layout via flex or absolute */
+
+            /* SEMI-TRANSPARENT GLASS BASE */
+            background-color: rgba(255, 255, 255, 0.05);
+
+            /* CRITICAL FIX: Robust Clipping */
+            overflow: hidden;
+            clip-path: inset(0px);
+            /* Forces clipping even in complex 3D contexts */
+
+            /* 3D Transform Defaults */
+            transform-style: flat;
+            /* Ensure children are flattened into the slat for clipping */
+            transform-origin: left center;
+            /* Hinged on left like a door */
+
+            /* Glass Borders - Muted to prevent "Overlap" look on text */
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+
+            opacity: 0;
+            /* Start hidden */
+            backface-visibility: hidden;
+            /* Ensure clean rendering */
+
+            will-change: transform;
+            /* Performance Hint */
+        }
+
+        /* Content inside the slat - RECONSTRUCTS THE FULL SCREEN IMAGE */
+        .slat-content {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            /* width/left set by JS to equal viewport width and negative offset */
+
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            /* Align to Top */
+            align-items: center;
+            /* Center text in the reconstructed view */
+            padding-top: 15vh;
+            /* Match static title position exactly */
+
+            /* Typography */
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
+
+            /* HIGH QUALITY GLOSS WALL GRADIENT */
+            /* This gradient covers the WHOLE screen across all slats */
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        /* Typography inside slats (used only during animation) */
+        .slat-content .plate-main-text {
+            font-size: 5vw;
+            /* Responsive huge text */
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            line-height: 1;
+            margin: 0;
+            color: #ffffff;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 1200px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 5vh 0;
+            pointer-events: none;
+            /* Allow clicks to pass to projects */
+        }
+
+        /* Hero Section */
+        #hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 50px;
+            pointer-events: none;
+        }
+
+        .name-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            z-index: 201;
+            /* Ensure name is above if overlap occurs */
+        }
+
+        .eng-name,
+        .kor-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 1.0);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+        }
+
+        .separator {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Projects Section - INTERACTION LAYER */
+        #projects {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding-bottom: 50px;
+
+            /* Z-INDEX FIX: High value to ensure it sits ON TOP of glass effect */
+            z-index: 200;
+            position: relative;
+            pointer-events: auto;
+            /* Re-enable clicks */
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            /* Lighter touch on dark bg */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            width: 280px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Hover Effect: Glow & Float */
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .glass-card p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+        }
+
+        .repo-link a {
+            text-decoration: none;
+            color: #4facfe;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .repo-link a:hover {
+            color: #00f2fe;
+        }
+
+
+        /* Animations - MAJESTIC SLOW OPEN */
+        @keyframes fullScreenReveal {
+            0% {
+                /* Start fully rotated BACKWARDS */
+                transform: perspective(2000px) rotateY(-100deg);
+                opacity: 1;
+                filter: brightness(0.5);
+                background-color: rgba(255, 255, 255, 0.1);
+                border-right: 1px solid rgba(255, 255, 255, 0.4);
+            }
+
+            100% {
+                /* Slam/Slide shut to flat */
+                transform: perspective(2000px) rotateY(0deg);
+                opacity: 1;
+                filter: brightness(1);
+                background-color: rgba(255, 255, 255, 0.05);
+                /* Return to subtle glass */
+                border-right: 1px solid rgba(255, 255, 255, 0.05);
+                /* Very subtle border */
+            }
+        }
+
+        /* Fade Utils */
+        .fade-in-2 {
+            opacity: 0;
+            animation: fadeInUp 1.5s ease-out forwards;
+            animation-delay: 3.5s;
+        }
+
+        .fade-in-3 {
+            opacity: 0;
+            animation: fadeInUp 1.5s ease-out forwards;
+            animation-delay: 4.5s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .plate-main-text {
+                font-size: 2.5rem;
+            }
+
+            .glass-card {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- Background Video -->
-    <video autoplay muted loop playsinline id="bg-video">
-        <source src="background.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
-    <!-- Overlay content -->
-    <div class="overlay"></div>
+    <!-- Background: Dark Neutral for 3D Pop -->
+    <div class="bg-neutral"></div>
 
     <!-- Main Content Container -->
     <div class="container">
         <!-- Cinematic Intro / Header -->
+
+        <!-- 3D STAGE (Visual Only) -->
+        <div class="full-screen-3d-stage">
+            <div class="title-plate-wrapper">
+                <!-- Slats injected here -->
+            </div>
+
+            <!-- STATIC TITLE (Transitions in after calc) -->
+            <div id="static-title-container" class="title-plate-static">
+                <h1 class="plate-main-text">ADVANCED AI SYSTEM</h1>
+            </div>
+        </div>
+
+        <!-- Name below title -->
         <header id="hero">
-            <h1 class="main-title fade-in-1">Advanced AI System</h1>
+            <!-- Spacer for title -->
+            <div style="height: 20vh;"></div>
+
             <div class="name-container fade-in-2">
                 <h2 class="eng-name">Sung Hun Kwag</h2>
                 <span class="separator">|</span>
@@ -107,7 +491,79 @@
         </section>
     </div>
 
-    <script src="script.js"></script>
+    <!-- INLINED JS TO FORCE UPDATE -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Configuration
+            const NUM_SLATS = 12; // REFACTOR: Reduce count for broader, cleaner columns
+            const ANIMATION_DURATION = 4.0;
+            const STAGGER_DELAY = 0.15; // Increased delay for weight
+
+            // Unified Full Screen Title Execution
+            function createFullScreenSlats() {
+                const wrapper = document.querySelector('.title-plate-wrapper');
+                // Use the static title text as source
+                const titleTextSource = document.querySelector('#static-title-container .plate-main-text').outerHTML;
+
+                wrapper.innerHTML = "";
+
+                const screenWidth = window.innerWidth;
+                const slatWidth = screenWidth / NUM_SLATS;
+
+                for (let i = 0; i < NUM_SLATS; i++) {
+                    const slat = document.createElement('div');
+                    slat.classList.add('slat');
+
+                    slat.style.width = `${slatWidth}px`;
+                    slat.style.position = "absolute";
+                    slat.style.left = `${i * slatWidth}px`;
+                    slat.style.zIndex = 100 + i;
+
+                    // Content Holder
+                    const content = document.createElement('div');
+                    content.classList.add('slat-content');
+                    content.innerHTML = titleTextSource;
+
+                    // Offset logic
+                    content.style.width = `${screenWidth}px`;
+                    content.style.left = `-${i * slatWidth}px`;
+
+                    slat.appendChild(content);
+                    wrapper.appendChild(slat);
+
+                    // Animation
+                    slat.style.animation = `fullScreenReveal ${ANIMATION_DURATION}s cubic-bezier(0.25, 1, 0.5, 1) forwards`;
+                    slat.style.animationDelay = `${i * STAGGER_DELAY}s`;
+
+                    // End Event to SWAP to static
+                    if (i === NUM_SLATS - 1) {
+                        const totalTime = (ANIMATION_DURATION + (i * STAGGER_DELAY)) * 1000;
+                        setTimeout(() => {
+                            // Swap
+                            wrapper.style.display = 'none'; // Hide 3D mess
+                            const staticTitle = document.getElementById('static-title-container');
+
+                            // Trigger Single Unified Animation Sequence
+                            staticTitle.classList.add('sequence-active');
+
+                        }, totalTime);
+                    }
+                }
+            }
+
+            // Initialize
+            setTimeout(() => {
+                createFullScreenSlats();
+            }, 100);
+
+            // Interactive Effects
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach(card => {
+                // Optional subtle effects
+            });
+        });
+        console.log("3D Refactored Engine Loaded.");
+    </script>
 </body>
 
 </html>
