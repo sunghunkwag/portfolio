@@ -51,7 +51,8 @@
 
         /* 3D Perspective Container */
         .full-screen-3d-stage {
-            perspective: 3000px;
+            perspective: 4200px;
+            perspective-origin: 50% 35%;
             width: 100vw;
             height: 100vh;
             overflow: hidden;
@@ -88,10 +89,12 @@
             z-index: 101;
             opacity: 0;
             pointer-events: none;
+            transform-style: preserve-3d;
         }
 
         .title-plate-static.sequence-active {
-            animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+                titleFloat 10s ease-in-out 2s infinite;
         }
 
         /* Unified sequence for the static title – holds then stays visible */
@@ -99,7 +102,7 @@
             0% {
                 opacity: 1;
                 filter: blur(0px);
-                transform: scale(1);
+                transform: scale(1) translateZ(0);
                 letter-spacing: -2px;
             }
             20% {
@@ -112,6 +115,16 @@
             }
         }
 
+        @keyframes titleFloat {
+            0%,
+            100% {
+                transform: translateZ(0) translateY(0);
+            }
+            50% {
+                transform: translateZ(30px) translateY(-6px);
+            }
+        }
+
         /* Title typography */
         .plate-main-text {
             font-size: 5vw;
@@ -120,8 +133,41 @@
             letter-spacing: -2px;
             line-height: 1;
             margin: 0;
-            color: #ffffff;
-            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(120deg, #ffffff 0%, #c8e8ff 35%, #f2f6ff 60%, #ffffff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.75),
+                0 0 40px rgba(85, 190, 255, 0.25);
+            filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.65));
+            animation: titleGlow 6s ease-in-out infinite;
+        }
+
+        .plate-main-text::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top, rgba(120, 210, 255, 0.35), transparent 60%);
+            filter: blur(18px);
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        @keyframes titleGlow {
+            0%,
+            100% {
+                text-shadow:
+                    0 8px 24px rgba(0, 0, 0, 0.75),
+                    0 0 35px rgba(85, 190, 255, 0.25);
+            }
+            50% {
+                text-shadow:
+                    0 10px 30px rgba(0, 0, 0, 0.85),
+                    0 0 60px rgba(120, 220, 255, 0.45);
+            }
         }
 
         /* Slat styles */
@@ -131,12 +177,15 @@
             background-color: rgba(255, 255, 255, 0.05);
             overflow: hidden;
             clip-path: inset(0px);
-            transform-style: flat;
+            transform-style: preserve-3d;
             transform-origin: left center;
             border-right: 1px solid rgba(255, 255, 255, 0.05);
             opacity: 0;
             backface-visibility: hidden;
             will-change: transform;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.45),
+                inset 0 0 20px rgba(120, 200, 255, 0.08);
         }
 
         .slat-content {
@@ -154,6 +203,7 @@
             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
+            mix-blend-mode: screen;
         }
 
         /* Main container for name and projects */
@@ -266,14 +316,14 @@
         @keyframes fullScreenReveal {
             /* Enhanced 3D reveal with depth and overshoot for a premium feel */
             0% {
-                transform: rotateY(-90deg) translateZ(-300px);
+                transform: rotateY(-95deg) translateZ(-420px);
                 opacity: 1;
                 filter: brightness(0.4);
                 background-color: rgba(255, 255, 255, 0.15);
                 border-right: 1px solid rgba(255, 255, 255, 0.4);
             }
             70% {
-                transform: rotateY(10deg) translateZ(40px);
+                transform: rotateY(14deg) translateZ(120px);
                 filter: brightness(1.2);
                 background-color: rgba(255, 255, 255, 0.1);
                 border-right: 1px solid rgba(255, 255, 255, 0.2);
@@ -396,7 +446,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             /* Configuration for slat animation */
-            const NUM_SLATS = 16; // increased number of slats for a smoother reveal
+            const NUM_SLATS = 20; // increased number of slats for a smoother reveal
             const ANIMATION_DURATION = 4.0;
             const STAGGER_DELAY = 0.15;
             function createFullScreenSlats() {
