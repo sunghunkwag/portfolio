@@ -95,7 +95,20 @@
         }
 
         .title-plate-static.sequence-active {
-            animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+                titleFloat 10s ease-in-out 2s infinite;
+        }
+
+        .title-plate-static.sequence-active .plate-main-text {
+            animation: titleGlow 6s ease-out forwards;
+        }
+
+        .title-plate-static.sequence-active .plate-main-text {
+            animation: titleGlow 6s ease-out forwards;
+        }
+
+        .title-plate-static.sequence-active .plate-main-text {
+            animation: titleGlow 6s ease-out forwards;
         }
 
         .title-plate-static.sequence-active .plate-main-text {
@@ -107,7 +120,7 @@
             0% {
                 opacity: 1;
                 filter: blur(0px);
-                transform: scale(1);
+                transform: scale(1) translateZ(0);
                 letter-spacing: -2px;
             }
             20% {
@@ -120,8 +133,19 @@
             }
         }
 
+        @keyframes titleFloat {
+            0%,
+            100% {
+                transform: translateZ(0) translateY(0);
+            }
+            50% {
+                transform: translateZ(30px) translateY(-6px);
+            }
+        }
+
         /* Title typography */
         .plate-main-text {
+            position: relative;
             font-size: 5vw;
             font-weight: 800;
             text-transform: none;
@@ -200,7 +224,7 @@
             color: #ffffff;
             font-family: 'Montserrat', sans-serif;
             white-space: nowrap;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.16) 0%, rgba(3, 7, 18, 0.9) 100%);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             transform: translateZ(80px);
@@ -318,9 +342,15 @@
             0% {
                 transform: rotateY(-115deg) rotateX(6deg) translateZ(-520px) scale(1.06);
                 opacity: 1;
-                filter: brightness(0.4);
-                background-color: rgba(255, 255, 255, 0.15);
-                border-right: 1px solid rgba(255, 255, 255, 0.4);
+                filter: brightness(0.35);
+                background-color: rgba(255, 255, 255, 0.2);
+                border-right: 1px solid rgba(255, 255, 255, 0.5);
+            }
+            60% {
+                transform: rotateY(22deg) rotateX(-3deg) translateZ(160px) scale(1.03);
+                filter: brightness(1.35);
+                background-color: rgba(255, 255, 255, 0.12);
+                border-right: 1px solid rgba(255, 255, 255, 0.25);
             }
             60% {
                 transform: rotateY(18deg) rotateX(-2deg) translateZ(120px) scale(1.02);
