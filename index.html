@@ -51,8 +51,8 @@
 
         /* 3D Perspective Container */
         .full-screen-3d-stage {
-            perspective: 4200px;
-            perspective-origin: 50% 35%;
+            perspective: 3600px;
+            perspective-origin: 50% 30%;
             width: 100vw;
             height: 100vh;
             overflow: hidden;
@@ -61,6 +61,7 @@
             left: 0;
             z-index: 100;
             pointer-events: none; /* allow underlying elements to be clickable */
+            transform: translateZ(0);
         }
 
         .title-plate-wrapper {
@@ -72,6 +73,7 @@
             transform-style: preserve-3d;
             display: flex;
             pointer-events: none;
+            transform: translateZ(140px) rotateX(2deg);
         }
 
         /* Static title displayed after the slat animation finishes */
@@ -89,12 +91,16 @@
             z-index: 101;
             opacity: 0;
             pointer-events: none;
-            transform-style: preserve-3d;
+            transform: translateZ(160px);
         }
 
         .title-plate-static.sequence-active {
             animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards,
                 titleFloat 10s ease-in-out 2s infinite;
+        }
+
+        .title-plate-static.sequence-active .plate-main-text {
+            animation: titleGlow 6s ease-out forwards;
         }
 
         /* Unified sequence for the static title – holds then stays visible */
@@ -133,40 +139,33 @@
             letter-spacing: -2px;
             line-height: 1;
             margin: 0;
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(120deg, #ffffff 0%, #c8e8ff 35%, #f2f6ff 60%, #ffffff 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: #ffffff;
             text-shadow:
-                0 8px 24px rgba(0, 0, 0, 0.75),
-                0 0 40px rgba(85, 190, 255, 0.25);
-            filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.65));
-            animation: titleGlow 6s ease-in-out infinite;
-        }
-
-        .plate-main-text::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at top, rgba(120, 210, 255, 0.35), transparent 60%);
-            filter: blur(18px);
-            opacity: 0.6;
-            z-index: -1;
+                0 12px 35px rgba(0, 0, 0, 0.8),
+                0 0 45px rgba(79, 172, 254, 0.25),
+                0 0 80px rgba(0, 242, 254, 0.2);
         }
 
         @keyframes titleGlow {
-            0%,
-            100% {
+            0% {
+                letter-spacing: -2px;
                 text-shadow:
-                    0 8px 24px rgba(0, 0, 0, 0.75),
-                    0 0 35px rgba(85, 190, 255, 0.25);
+                    0 12px 35px rgba(0, 0, 0, 0.8),
+                    0 0 25px rgba(79, 172, 254, 0.2);
             }
-            50% {
+            60% {
+                letter-spacing: 0px;
                 text-shadow:
-                    0 10px 30px rgba(0, 0, 0, 0.85),
-                    0 0 60px rgba(120, 220, 255, 0.45);
+                    0 18px 45px rgba(0, 0, 0, 0.75),
+                    0 0 60px rgba(79, 172, 254, 0.35),
+                    0 0 120px rgba(0, 242, 254, 0.25);
+            }
+            100% {
+                letter-spacing: -1px;
+                text-shadow:
+                    0 14px 40px rgba(0, 0, 0, 0.8),
+                    0 0 70px rgba(79, 172, 254, 0.3),
+                    0 0 120px rgba(0, 242, 254, 0.25);
             }
         }
 
@@ -184,8 +183,20 @@
             backface-visibility: hidden;
             will-change: transform;
             box-shadow:
-                0 20px 60px rgba(0, 0, 0, 0.45),
-                inset 0 0 20px rgba(120, 200, 255, 0.08);
+                inset 0 0 45px rgba(255, 255, 255, 0.08),
+                0 20px 60px rgba(0, 0, 0, 0.45);
+        }
+
+        .slat::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+            opacity: 0;
+            transform: translateZ(40px);
+            animation: slatSheen var(--slat-duration, 4.8s) ease-out forwards;
+            animation-delay: var(--slat-delay, 0s);
+            pointer-events: none;
         }
 
         .slat-content {
@@ -203,7 +214,7 @@
             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
-            mix-blend-mode: screen;
+            transform: translateZ(80px);
         }
 
         /* Main container for name and projects */
@@ -316,24 +327,40 @@
         @keyframes fullScreenReveal {
             /* Enhanced 3D reveal with depth and overshoot for a premium feel */
             0% {
-                transform: rotateY(-95deg) translateZ(-420px);
+                transform: rotateY(-115deg) rotateX(6deg) translateZ(-520px) scale(1.06);
                 opacity: 1;
                 filter: brightness(0.4);
                 background-color: rgba(255, 255, 255, 0.15);
                 border-right: 1px solid rgba(255, 255, 255, 0.4);
             }
-            70% {
-                transform: rotateY(14deg) translateZ(120px);
-                filter: brightness(1.2);
+            60% {
+                transform: rotateY(18deg) rotateX(-2deg) translateZ(120px) scale(1.02);
+                filter: brightness(1.25);
                 background-color: rgba(255, 255, 255, 0.1);
                 border-right: 1px solid rgba(255, 255, 255, 0.2);
             }
+            85% {
+                transform: rotateY(-4deg) rotateX(1deg) translateZ(40px) scale(1.01);
+                filter: brightness(1.08);
+            }
             100% {
-                transform: rotateY(0deg) translateZ(0);
+                transform: rotateY(0deg) rotateX(0deg) translateZ(0) scale(1);
                 opacity: 1;
                 filter: brightness(1);
                 background-color: rgba(255, 255, 255, 0.05);
                 border-right: 1px solid rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        @keyframes slatSheen {
+            0% {
+                opacity: 0;
+            }
+            55% {
+                opacity: 0.25;
+            }
+            100% {
+                opacity: 0.08;
             }
         }
 
@@ -377,7 +404,7 @@
         <div class="full-screen-3d-stage">
             <div class="title-plate-wrapper"><!-- slats inserted here via JS --></div>
             <div id="static-title-container" class="title-plate-static">
-                <h1 class="plate-main-text">INTELLIGENCE SYSTEMS RESEARCH</h1>
+                <h1 class="plate-main-text">Intelligence Systems Research</h1>
             </div>
         </div>
         <!-- Name under the title -->
@@ -446,9 +473,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             /* Configuration for slat animation */
-            const NUM_SLATS = 20; // increased number of slats for a smoother reveal
-            const ANIMATION_DURATION = 4.0;
-            const STAGGER_DELAY = 0.15;
+            const NUM_SLATS = 22; // increased number of slats for a smoother reveal
+            const ANIMATION_DURATION = 4.8;
+            const STAGGER_DELAY = 0.08;
             function createFullScreenSlats() {
                 const wrapper = document.querySelector('.title-plate-wrapper');
                 const titleTextSource = document.querySelector('#static-title-container .plate-main-text').outerHTML;
@@ -462,6 +489,8 @@
                     slat.style.position = "absolute";
                     slat.style.left = `${i * slatWidth}px`;
                     slat.style.zIndex = 100 + i;
+                    slat.style.setProperty('--slat-delay', `${i * STAGGER_DELAY}s`);
+                    slat.style.setProperty('--slat-duration', `${ANIMATION_DURATION}s`);
                     const content = document.createElement('div');
                     content.classList.add('slat-content');
                     content.innerHTML = titleTextSource;
