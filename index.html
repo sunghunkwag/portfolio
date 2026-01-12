@@ -95,7 +95,16 @@
         }
 
         .title-plate-static.sequence-active {
-            animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+                titleFloat 10s ease-in-out 2s infinite;
+        }
+
+        .title-plate-static.sequence-active .plate-main-text {
+            animation: titleGlow 6s ease-out forwards;
+        }
+
+        .title-plate-static.sequence-active .plate-main-text {
+            animation: titleGlow 6s ease-out forwards;
         }
 
         .title-plate-static.sequence-active .plate-main-text {
@@ -107,7 +116,7 @@
             0% {
                 opacity: 1;
                 filter: blur(0px);
-                transform: scale(1);
+                transform: scale(1) translateZ(0);
                 letter-spacing: -2px;
             }
             20% {
@@ -117,6 +126,16 @@
                 opacity: 1;
                 text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
                 letter-spacing: -2px;
+            }
+        }
+
+        @keyframes titleFloat {
+            0%,
+            100% {
+                transform: translateZ(0) translateY(0);
+            }
+            50% {
+                transform: translateZ(30px) translateY(-6px);
             }
         }
 
@@ -366,6 +385,10 @@
             85% {
                 transform: rotateY(-6deg) rotateX(2deg) translateZ(60px) scale(1.015);
                 filter: brightness(1.12);
+            }
+            85% {
+                transform: rotateY(-4deg) rotateX(1deg) translateZ(40px) scale(1.01);
+                filter: brightness(1.08);
             }
             100% {
                 transform: rotateY(0deg) rotateX(0deg) translateZ(0) scale(1);
