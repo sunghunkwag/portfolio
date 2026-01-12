@@ -111,6 +111,10 @@
             animation: titleGlow 6s ease-out forwards;
         }
 
+        .title-plate-static.sequence-active .plate-main-text {
+            animation: titleGlow 6s ease-out forwards;
+        }
+
         /* Unified sequence for the static title – holds then stays visible */
         @keyframes singleSequenceFade {
             0% {
@@ -145,69 +149,36 @@
             font-size: 5vw;
             font-weight: 800;
             text-transform: none;
-            letter-spacing: -1px;
+            letter-spacing: -2px;
             line-height: 1;
             margin: 0;
             color: #ffffff;
             text-shadow:
-                0 16px 45px rgba(0, 0, 0, 0.85),
-                0 0 30px rgba(255, 255, 255, 0.25),
-                0 0 70px rgba(79, 172, 254, 0.45),
-                0 0 130px rgba(0, 242, 254, 0.35),
-                0 0 190px rgba(99, 102, 241, 0.25);
-            filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.4));
-        }
-
-        .plate-main-text::after {
-            content: attr(data-text);
-            position: absolute;
-            inset: 0;
-            color: transparent;
-            text-shadow:
-                0 0 30px rgba(255, 255, 255, 0.35),
-                0 0 90px rgba(79, 172, 254, 0.55),
-                0 0 160px rgba(0, 242, 254, 0.45),
-                0 0 220px rgba(99, 102, 241, 0.35);
-            filter: blur(2px);
-            opacity: 0.9;
-            pointer-events: none;
-            animation: auraPulse 6s ease-in-out infinite;
+                0 12px 35px rgba(0, 0, 0, 0.8),
+                0 0 45px rgba(79, 172, 254, 0.25),
+                0 0 80px rgba(0, 242, 254, 0.2);
         }
 
         @keyframes titleGlow {
             0% {
-                letter-spacing: -1px;
+                letter-spacing: -2px;
                 text-shadow:
-                    0 16px 45px rgba(0, 0, 0, 0.85),
-                    0 0 35px rgba(79, 172, 254, 0.25),
-                    0 0 80px rgba(0, 242, 254, 0.25);
+                    0 12px 35px rgba(0, 0, 0, 0.8),
+                    0 0 25px rgba(79, 172, 254, 0.2);
             }
             60% {
                 letter-spacing: 0px;
                 text-shadow:
-                    0 22px 55px rgba(0, 0, 0, 0.75),
-                    0 0 70px rgba(79, 172, 254, 0.45),
-                    0 0 140px rgba(0, 242, 254, 0.35),
-                    0 0 210px rgba(99, 102, 241, 0.3);
+                    0 18px 45px rgba(0, 0, 0, 0.75),
+                    0 0 60px rgba(79, 172, 254, 0.35),
+                    0 0 120px rgba(0, 242, 254, 0.25);
             }
             100% {
                 letter-spacing: -1px;
                 text-shadow:
-                    0 18px 50px rgba(0, 0, 0, 0.85),
-                    0 0 80px rgba(79, 172, 254, 0.4),
-                    0 0 150px rgba(0, 242, 254, 0.35),
-                    0 0 210px rgba(99, 102, 241, 0.3);
-            }
-        }
-
-        @keyframes auraPulse {
-            0%, 100% {
-                opacity: 0.7;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.02);
+                    0 14px 40px rgba(0, 0, 0, 0.8),
+                    0 0 70px rgba(79, 172, 254, 0.3),
+                    0 0 120px rgba(0, 242, 254, 0.25);
             }
         }
 
@@ -225,16 +196,15 @@
             backface-visibility: hidden;
             will-change: transform;
             box-shadow:
-                inset 0 0 55px rgba(255, 255, 255, 0.14),
-                inset 0 0 90px rgba(79, 172, 254, 0.12),
-                0 30px 80px rgba(0, 0, 0, 0.55);
+                inset 0 0 45px rgba(255, 255, 255, 0.08),
+                0 20px 60px rgba(0, 0, 0, 0.45);
         }
 
         .slat::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0));
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
             opacity: 0;
             transform: translateZ(40px);
             animation: slatSheen var(--slat-duration, 4.8s) ease-out forwards;
@@ -257,7 +227,7 @@
             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.16) 0%, rgba(3, 7, 18, 0.9) 100%);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
-            transform: translateZ(100px);
+            transform: translateZ(80px);
         }
 
         /* Main container for name and projects */
@@ -370,7 +340,7 @@
         @keyframes fullScreenReveal {
             /* Enhanced 3D reveal with depth and overshoot for a premium feel */
             0% {
-                transform: rotateY(-125deg) rotateX(8deg) translateZ(-620px) scale(1.08);
+                transform: rotateY(-115deg) rotateX(6deg) translateZ(-520px) scale(1.06);
                 opacity: 1;
                 filter: brightness(0.35);
                 background-color: rgba(255, 255, 255, 0.2);
@@ -382,9 +352,11 @@
                 background-color: rgba(255, 255, 255, 0.12);
                 border-right: 1px solid rgba(255, 255, 255, 0.25);
             }
-            85% {
-                transform: rotateY(-6deg) rotateX(2deg) translateZ(60px) scale(1.015);
-                filter: brightness(1.12);
+            60% {
+                transform: rotateY(18deg) rotateX(-2deg) translateZ(120px) scale(1.02);
+                filter: brightness(1.25);
+                background-color: rgba(255, 255, 255, 0.1);
+                border-right: 1px solid rgba(255, 255, 255, 0.2);
             }
             85% {
                 transform: rotateY(-4deg) rotateX(1deg) translateZ(40px) scale(1.01);
@@ -404,10 +376,10 @@
                 opacity: 0;
             }
             55% {
-                opacity: 0.35;
+                opacity: 0.25;
             }
             100% {
-                opacity: 0.12;
+                opacity: 0.08;
             }
         }
 
@@ -451,7 +423,7 @@
         <div class="full-screen-3d-stage">
             <div class="title-plate-wrapper"><!-- slats inserted here via JS --></div>
             <div id="static-title-container" class="title-plate-static">
-                <h1 class="plate-main-text" data-text="AI Systems Research">AI Systems Research</h1>
+                <h1 class="plate-main-text">Intelligence Systems Research</h1>
             </div>
         </div>
         <!-- Name under the title -->
