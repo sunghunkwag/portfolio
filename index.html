@@ -95,7 +95,8 @@
         }
 
         .title-plate-static.sequence-active {
-            animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards,
+                titleFloat 10s ease-in-out 2s infinite;
         }
 
         .title-plate-static.sequence-active .plate-main-text {
@@ -107,7 +108,7 @@
             0% {
                 opacity: 1;
                 filter: blur(0px);
-                transform: scale(1);
+                transform: scale(1) translateZ(0);
                 letter-spacing: -2px;
             }
             20% {
@@ -117,6 +118,16 @@
                 opacity: 1;
                 text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
                 letter-spacing: -2px;
+            }
+        }
+
+        @keyframes titleFloat {
+            0%,
+            100% {
+                transform: translateZ(0) translateY(0);
+            }
+            50% {
+                transform: translateZ(30px) translateY(-6px);
             }
         }
 
