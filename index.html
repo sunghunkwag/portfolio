@@ -124,6 +124,10 @@
             animation: none;
         }
 
+        .title-plate-static.sequence-active .plate-main-text {
+            animation: none;
+        }
+
         /* Unified sequence for the static title – holds then stays visible */
         @keyframes singleSequenceFade {
             0% {
@@ -163,31 +167,31 @@
             margin: 0;
             color: #ffffff;
             text-shadow:
-                0 12px 35px rgba(0, 0, 0, 0.8),
-                0 0 45px rgba(79, 172, 254, 0.25),
-                0 0 80px rgba(0, 242, 254, 0.2);
+                0 10px 28px rgba(0, 0, 0, 0.7),
+                0 0 28px rgba(79, 172, 254, 0.18),
+                0 0 55px rgba(0, 242, 254, 0.12);
         }
 
         @keyframes titleGlow {
             0% {
                 letter-spacing: -2px;
                 text-shadow:
-                    0 12px 35px rgba(0, 0, 0, 0.8),
-                    0 0 25px rgba(79, 172, 254, 0.2);
+                    0 10px 28px rgba(0, 0, 0, 0.7),
+                    0 0 22px rgba(79, 172, 254, 0.18);
             }
             60% {
                 letter-spacing: 0px;
                 text-shadow:
-                    0 18px 45px rgba(0, 0, 0, 0.75),
-                    0 0 60px rgba(79, 172, 254, 0.35),
-                    0 0 120px rgba(0, 242, 254, 0.25);
+                    0 16px 38px rgba(0, 0, 0, 0.68),
+                    0 0 45px rgba(79, 172, 254, 0.22),
+                    0 0 90px rgba(0, 242, 254, 0.16);
             }
             100% {
                 letter-spacing: -1px;
                 text-shadow:
-                    0 14px 40px rgba(0, 0, 0, 0.8),
-                    0 0 70px rgba(79, 172, 254, 0.3),
-                    0 0 120px rgba(0, 242, 254, 0.25);
+                    0 12px 32px rgba(0, 0, 0, 0.72),
+                    0 0 50px rgba(79, 172, 254, 0.2),
+                    0 0 95px rgba(0, 242, 254, 0.16);
             }
         }
 
@@ -205,8 +209,8 @@
             backface-visibility: hidden;
             will-change: transform;
             box-shadow:
-                inset 0 0 45px rgba(255, 255, 255, 0.08),
-                0 20px 60px rgba(0, 0, 0, 0.45);
+                inset 0 0 32px rgba(255, 255, 255, 0.06),
+                0 18px 45px rgba(0, 0, 0, 0.4);
         }
 
         .slat::before {
@@ -351,15 +355,19 @@
             0% {
                 transform: rotateY(-115deg) rotateX(6deg) translateZ(-520px) scale(1.06);
                 opacity: 1;
-                filter: brightness(0.35);
-                background-color: rgba(255, 255, 255, 0.2);
-                border-right: 1px solid rgba(255, 255, 255, 0.5);
+                filter: brightness(0.45);
+                background-color: rgba(255, 255, 255, 0.12);
+                border-right: 1px solid rgba(255, 255, 255, 0.3);
             }
             60% {
                 transform: rotateY(18deg) rotateX(-2deg) translateZ(120px) scale(1.02);
-                filter: brightness(1.25);
-                background-color: rgba(255, 255, 255, 0.1);
-                border-right: 1px solid rgba(255, 255, 255, 0.2);
+                filter: brightness(1.18);
+                background-color: rgba(255, 255, 255, 0.08);
+                border-right: 1px solid rgba(255, 255, 255, 0.16);
+            }
+            85% {
+                transform: rotateY(-4deg) rotateX(1deg) translateZ(40px) scale(1.01);
+                filter: brightness(1.04);
             }
             85% {
                 transform: rotateY(-4deg) rotateX(1deg) translateZ(40px) scale(1.01);
@@ -379,10 +387,10 @@
                 opacity: 0;
             }
             55% {
-                opacity: 0.25;
+                opacity: 0.18;
             }
             100% {
-                opacity: 0.08;
+                opacity: 0.06;
             }
         }
 
