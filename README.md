@@ -1,3 +1,1 @@
-## Deployment
-
-This repository is intended for GitHub Pages. Ensure the `docs/` directory (or root, depending on your Pages settings) contains the latest `index.html` when publishing.
+Personal portfolio website featuring 3D glassmorphism design to showcase advanced AI research projects.
