@@ -37,6 +37,107 @@
             align-items: center;
         }
 
+        /* Cosmic 3D background field */
+        .cosmic-depth {
+            position: fixed;
+            inset: 0;
+            perspective: 3200px;
+            perspective-origin: 50% 35%;
+            transform-style: preserve-3d;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .cosmic-layer {
+            position: absolute;
+            inset: -20%;
+            transform-style: preserve-3d;
+            mix-blend-mode: screen;
+            opacity: 0.9;
+            animation: cosmicDrift 18s ease-in-out infinite;
+        }
+
+        .cosmic-layer::before,
+        .cosmic-layer::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-repeat: repeat;
+            mix-blend-mode: screen;
+        }
+
+        .layer-back {
+            --depth: -800px;
+            --scale: 1.6;
+            filter: blur(1px) saturate(140%);
+            animation-duration: 26s;
+        }
+
+        .layer-mid {
+            --depth: -420px;
+            --scale: 1.25;
+            filter: blur(0.4px) saturate(160%);
+            animation-duration: 20s;
+        }
+
+        .layer-front {
+            --depth: -140px;
+            --scale: 1.05;
+            filter: blur(0.1px) saturate(180%);
+            animation-duration: 14s;
+        }
+
+        .layer-back::before {
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(98, 176, 255, 0.35) 0 2px, rgba(0, 0, 0, 0) 3px),
+                radial-gradient(circle at 80% 40%, rgba(120, 245, 255, 0.45) 0 1.4px, rgba(0, 0, 0, 0) 3px),
+                radial-gradient(circle at 50% 70%, rgba(140, 190, 255, 0.3) 0 1.8px, rgba(0, 0, 0, 0) 4px),
+                radial-gradient(circle at 10% 80%, rgba(160, 200, 255, 0.25) 0 1.2px, rgba(0, 0, 0, 0) 3px);
+            background-size: 520px 520px;
+            opacity: 0.7;
+        }
+
+        .layer-back::after {
+            background-image:
+                conic-gradient(from 210deg at 50% 50%, rgba(90, 180, 255, 0.18), rgba(0, 0, 0, 0) 65%),
+                radial-gradient(circle at 40% 60%, rgba(64, 140, 255, 0.28), rgba(0, 0, 0, 0) 60%);
+            filter: blur(30px);
+            opacity: 0.6;
+        }
+
+        .layer-mid::before {
+            background-image:
+                radial-gradient(circle at 30% 50%, rgba(160, 240, 255, 0.5) 0 1.6px, rgba(0, 0, 0, 0) 3px),
+                radial-gradient(circle at 70% 60%, rgba(120, 210, 255, 0.6) 0 1.8px, rgba(0, 0, 0, 0) 3.6px),
+                radial-gradient(circle at 45% 25%, rgba(118, 220, 255, 0.4) 0 1.4px, rgba(0, 0, 0, 0) 3px);
+            background-size: 360px 360px;
+            opacity: 0.85;
+        }
+
+        .layer-mid::after {
+            background-image:
+                radial-gradient(circle at 60% 40%, rgba(94, 180, 255, 0.35), rgba(0, 0, 0, 0) 62%),
+                radial-gradient(circle at 32% 68%, rgba(70, 140, 255, 0.35), rgba(0, 0, 0, 0) 58%);
+            filter: blur(18px);
+            opacity: 0.7;
+        }
+
+        .layer-front::before {
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(210, 250, 255, 0.9) 0 2px, rgba(0, 0, 0, 0) 4px),
+                radial-gradient(circle at 80% 30%, rgba(160, 230, 255, 0.8) 0 1.6px, rgba(0, 0, 0, 0) 3px),
+                radial-gradient(circle at 50% 80%, rgba(210, 255, 255, 0.8) 0 1.6px, rgba(0, 0, 0, 0) 3px);
+            background-size: 220px 220px;
+            opacity: 0.9;
+        }
+
+        .layer-front::after {
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(180, 255, 255, 0.22), rgba(0, 0, 0, 0) 55%);
+            filter: blur(10px);
+            opacity: 0.5;
+        }
+
         /* Background Neutral */
         .bg-neutral {
             position: fixed;
@@ -345,6 +446,21 @@
             }
         }
 
+        @keyframes cosmicDrift {
+            0% {
+                transform: translateZ(var(--depth, -400px)) scale(var(--scale, 1.2)) rotate(0deg);
+                opacity: 0.75;
+            }
+            50% {
+                transform: translateZ(calc(var(--depth, -400px) + 60px)) scale(calc(var(--scale, 1.2) * 1.02)) rotate(2deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateZ(var(--depth, -400px)) scale(var(--scale, 1.2)) rotate(-1.5deg);
+                opacity: 0.8;
+            }
+        }
+
         @keyframes fullScreenReveal {
             0% {
                 transform: rotateY(calc(-96deg + var(--tilt-y, 0deg))) rotateX(var(--tilt-x, 0deg)) translateZ(calc(-360px - var(--depth, 0px))) scaleX(0.93);
@@ -469,6 +585,11 @@
 
 <body>
     <!-- Dark backdrop -->
+    <div class="cosmic-depth" aria-hidden="true">
+        <div class="cosmic-layer layer-back"></div>
+        <div class="cosmic-layer layer-mid"></div>
+        <div class="cosmic-layer layer-front"></div>
+    </div>
     <div class="bg-neutral" aria-hidden="true"></div>
     <!-- Main content -->
     <div class="container">
