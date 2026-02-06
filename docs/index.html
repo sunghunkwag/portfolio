@@ -151,6 +151,24 @@
             animation-delay: var(--particle-delay, 0s);
         }
 
+        .merge-light-rays {
+            position: absolute;
+            inset: -25%;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 99;
+            transform: translateZ(-120px) scale(0.92);
+            filter: blur(1px);
+            background:
+                radial-gradient(circle at center, rgba(160, 232, 255, 0.45) 0%, rgba(95, 168, 255, 0.12) 28%, rgba(0, 0, 0, 0) 58%),
+                conic-gradient(from 10deg at 50% 50%, rgba(143, 214, 255, 0.00) 0deg, rgba(143, 214, 255, 0.32) 30deg, rgba(143, 214, 255, 0.02) 65deg, rgba(88, 166, 255, 0.28) 120deg, rgba(88, 166, 255, 0.0) 165deg, rgba(143, 214, 255, 0.24) 218deg, rgba(143, 214, 255, 0.02) 255deg, rgba(88, 166, 255, 0.28) 300deg, rgba(143, 214, 255, 0.00) 360deg);
+            mix-blend-mode: screen;
+        }
+
+        .merge-light-rays.active {
+            animation: mergeLightBurst 1.7s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
         /* Static title displayed after the slat animation finishes */
         .title-plate-static {
             position: absolute;
