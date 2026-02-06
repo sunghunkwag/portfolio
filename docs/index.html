@@ -44,8 +44,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Radial gradient for vignette effect */
-            background: radial-gradient(circle at center, #1f2937 0%, #000000 100%);
+            background:
+                radial-gradient(120% 80% at 20% 10%, rgba(90, 136, 255, 0.28) 0%, rgba(0, 0, 0, 0) 45%),
+                radial-gradient(100% 70% at 80% 20%, rgba(105, 221, 255, 0.2) 0%, rgba(0, 0, 0, 0) 42%),
+                radial-gradient(circle at center, #1a2233 0%, #05070d 62%, #000000 100%);
+            animation: bgDrift 14s ease-in-out infinite alternate;
             z-index: -1;
         }
 
@@ -71,6 +74,56 @@
             transform-style: preserve-3d;
             display: flex;
             pointer-events: none;
+        }
+
+        .merge-light-rays {
+            position: absolute;
+            inset: -20%;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 99;
+            transform: translateZ(-80px) scale(0.88);
+            filter: blur(0.5px);
+            background:
+                radial-gradient(circle at center, rgba(189, 239, 255, 0.62) 0%, rgba(141, 189, 255, 0.24) 18%, rgba(7, 14, 26, 0.0) 52%),
+                linear-gradient(112deg, rgba(126, 214, 255, 0) 0%, rgba(126, 214, 255, 0.22) 34%, rgba(255, 255, 255, 0.42) 48%, rgba(126, 214, 255, 0.2) 62%, rgba(126, 214, 255, 0) 100%),
+                linear-gradient(-112deg, rgba(92, 166, 255, 0) 0%, rgba(92, 166, 255, 0.18) 36%, rgba(198, 236, 255, 0.34) 50%, rgba(92, 166, 255, 0.16) 64%, rgba(92, 166, 255, 0) 100%);
+            mix-blend-mode: screen;
+        }
+
+        .merge-light-rays::before,
+        .merge-light-rays::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        .merge-light-rays::before {
+            background:
+                radial-gradient(circle at center, rgba(182, 236, 255, 0.45) 0%, rgba(182, 236, 255, 0) 42%),
+                repeating-conic-gradient(from 0deg at 50% 50%, rgba(134, 214, 255, 0.0) 0deg, rgba(134, 214, 255, 0.34) 9deg, rgba(134, 214, 255, 0.0) 23deg);
+            filter: blur(1.2px);
+            transform: scale(0.84);
+        }
+
+        .merge-light-rays::after {
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.42) 0%, rgba(182, 236, 255, 0.25) 11%, rgba(182, 236, 255, 0.0) 28%);
+            transform: scale(0.5);
+        }
+
+        .merge-light-rays.active {
+            animation: mergeLightBurst 1.9s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        .merge-light-rays.active::before {
+            animation: raySweep 1.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        .merge-light-rays.active::after {
+            animation: haloPulse 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         /* Static title displayed after the slat animation finishes */
@@ -131,12 +184,24 @@
             background-color: rgba(255, 255, 255, 0.05);
             overflow: hidden;
             clip-path: inset(0px);
-            transform-style: flat;
+            transform-style: preserve-3d;
             transform-origin: left center;
             border-right: 1px solid rgba(255, 255, 255, 0.05);
             opacity: 0;
             backface-visibility: hidden;
             will-change: transform;
+            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.08), 0 18px 48px rgba(0, 0, 0, 0.45);
+        }
+
+        .slat::before {
+            content: "";
+            position: absolute;
+            inset: -10% -30%;
+            background: linear-gradient(100deg, rgba(255, 255, 255, 0.0), rgba(199, 239, 255, 0.24), rgba(255, 255, 255, 0.0));
+            opacity: 0;
+            transform: translateX(-30%);
+            animation: slatPrism var(--slat-duration, 4.4s) ease-out forwards;
+            animation-delay: var(--slat-delay, 0s);
         }
 
         .slat-content {
@@ -264,27 +329,100 @@
         /* Removed repo-meta styling as dynamic metadata is no longer used */
 
         /* Animation keyframes for slats reveal */
-        @keyframes fullScreenReveal {
-            /* Enhanced 3D reveal with depth and overshoot for a premium feel */
+        @keyframes bgDrift {
             0% {
-                transform: rotateY(-90deg) translateZ(-300px);
-                opacity: 1;
-                filter: brightness(0.4);
-                background-color: rgba(255, 255, 255, 0.15);
-                border-right: 1px solid rgba(255, 255, 255, 0.4);
-            }
-            70% {
-                transform: rotateY(10deg) translateZ(40px);
-                filter: brightness(1.2);
-                background-color: rgba(255, 255, 255, 0.1);
-                border-right: 1px solid rgba(255, 255, 255, 0.2);
+                filter: saturate(1) brightness(1);
+                transform: scale(1);
             }
             100% {
-                transform: rotateY(0deg) translateZ(0);
+                filter: saturate(1.1) brightness(1.06);
+                transform: scale(1.03);
+            }
+        }
+
+        @keyframes fullScreenReveal {
+            0% {
+                transform: perspective(1400px) rotateY(calc(-92deg + var(--tilt, 0deg))) rotateX(6deg) translateZ(calc(-420px + var(--depth, 0px))) scaleX(0.86);
+                opacity: 0.95;
+                filter: brightness(0.36) saturate(0.8);
+                background-color: rgba(255, 255, 255, 0.16);
+                border-right: 1px solid rgba(255, 255, 255, 0.38);
+            }
+            45% {
+                transform: perspective(1400px) rotateY(calc(-8deg + var(--tilt-mid, 0deg))) rotateX(-2deg) translateZ(calc(22px + var(--depth-mid, 0px))) scaleX(1.01);
+                filter: brightness(1.24) saturate(1.15);
+            }
+            78% {
+                transform: perspective(1400px) rotateY(calc(7deg - var(--tilt-end, 0deg))) rotateX(1deg) translateZ(58px) scaleX(1.015);
+                filter: brightness(1.08) saturate(1.1);
+            }
+            100% {
+                transform: rotateY(0deg) rotateX(0deg) translateZ(0) scaleX(1);
                 opacity: 1;
-                filter: brightness(1);
+                filter: brightness(1) saturate(1.02);
                 background-color: rgba(255, 255, 255, 0.05);
                 border-right: 1px solid rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        @keyframes slatPrism {
+            0% {
+                opacity: 0;
+                transform: translateX(-40%) scaleX(0.9);
+            }
+            55% {
+                opacity: 0.44;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(40%) scaleX(1.06);
+            }
+        }
+
+        @keyframes mergeLightBurst {
+            0% {
+                opacity: 0;
+                transform: translateZ(-80px) scale(0.88) rotate(-3deg);
+            }
+            24% {
+                opacity: 0.88;
+                transform: translateZ(-10px) scale(1.03) rotate(2deg);
+            }
+            60% {
+                opacity: 0.24;
+                transform: translateZ(28px) scale(1.11) rotate(7deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateZ(45px) scale(1.18) rotate(10deg);
+            }
+        }
+
+        @keyframes raySweep {
+            0% {
+                opacity: 0;
+                transform: scale(0.84) rotate(0deg);
+            }
+            35% {
+                opacity: 0.82;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.25) rotate(18deg);
+            }
+        }
+
+        @keyframes haloPulse {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            25% {
+                opacity: 0.95;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.5);
             }
         }
 
@@ -326,6 +464,7 @@
     <div class="container">
         <!-- 3D title reveal stage -->
         <div class="full-screen-3d-stage">
+            <div id="merge-light-rays" class="merge-light-rays" aria-hidden="true"></div>
             <div class="title-plate-wrapper"><!-- slats inserted here via JS --></div>
             <div id="static-title-container" class="title-plate-static">
                 <h1 class="plate-main-text">ADVANCED AI SYSTEM</h1>
@@ -359,12 +498,12 @@
                     <a href="https://github.com/sunghunkwag/Advanced-AI-Meta-Cognition-System" target="_blank">View on GitHub &rarr;</a>
                 </div>
             </div>
-            <div class="glass-card" onclick="window.open('https://github.com/sunghunkwag/AI-Research-Nexus', '_blank')">
-                <h3>AI-Research-Nexus</h3>
-                <p>Runtime code modification framework for recursive self‑improvement and evolutionary adaptation.</p>
+            <div class="glass-card" onclick="window.open('https://github.com/sunghunkwag/heterogeneous-agent-swarm', '_blank')">
+                <h3>Heterogeneous Agent Swarm</h3>
+                <p>Multi-agent orchestration framework for heterogeneous AI teams collaborating on complex research tasks.</p>
                 <!-- metadata placeholder removed -->
                 <div class="repo-link">
-                    <a href="https://github.com/sunghunkwag/AI-Research-Nexus" target="_blank">View on GitHub &rarr;</a>
+                    <a href="https://github.com/sunghunkwag/heterogeneous-agent-swarm" target="_blank">View on GitHub &rarr;</a>
                 </div>
             </div>
             <div class="glass-card" onclick="window.open('https://github.com/sunghunkwag/SSM-MetaRL-TestCompute', '_blank')">
@@ -397,11 +536,12 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             /* Configuration for slat animation */
-            const NUM_SLATS = 16; // increased number of slats for a smoother reveal
-            const ANIMATION_DURATION = 4.0;
-            const STAGGER_DELAY = 0.15;
+            const NUM_SLATS = 22; // denser segmentation for smoother fusion
+            const ANIMATION_DURATION = 4.4;
+            const STAGGER_DELAY = 0.11;
             function createFullScreenSlats() {
                 const wrapper = document.querySelector('.title-plate-wrapper');
+                const lightRays = document.getElementById('merge-light-rays');
                 const titleTextSource = document.querySelector('#static-title-container .plate-main-text').outerHTML;
                 wrapper.innerHTML = "";
                 const screenWidth = window.innerWidth;
@@ -413,6 +553,16 @@
                     slat.style.position = "absolute";
                     slat.style.left = `${i * slatWidth}px`;
                     slat.style.zIndex = 100 + i;
+                    const centerBias = (i / (NUM_SLATS - 1)) - 0.5;
+                    const tilt = centerBias * 14;
+                    const depth = Math.abs(centerBias) * -120;
+                    slat.style.setProperty('--tilt', `${tilt.toFixed(2)}deg`);
+                    slat.style.setProperty('--depth', `${depth.toFixed(2)}px`);
+                    slat.style.setProperty('--tilt-mid', `${(tilt * 0.35).toFixed(2)}deg`);
+                    slat.style.setProperty('--tilt-end', `${(Math.abs(tilt) * 0.2).toFixed(2)}deg`);
+                    slat.style.setProperty('--depth-mid', `${(depth * 0.24).toFixed(2)}px`);
+                    slat.style.setProperty('--slat-delay', `${(i * STAGGER_DELAY).toFixed(3)}s`);
+                    slat.style.setProperty('--slat-duration', `${ANIMATION_DURATION}s`);
                     const content = document.createElement('div');
                     content.classList.add('slat-content');
                     content.innerHTML = titleTextSource;
@@ -424,6 +574,12 @@
                     slat.style.animationDelay = `${i * STAGGER_DELAY}s`;
                     if (i === NUM_SLATS - 1) {
                         const totalTime = (ANIMATION_DURATION + (i * STAGGER_DELAY)) * 1000;
+                        const burstStartTime = Math.max(totalTime - 260, 0);
+                        setTimeout(() => {
+                            lightRays.classList.remove('active');
+                            void lightRays.offsetWidth;
+                            lightRays.classList.add('active');
+                        }, burstStartTime);
                         setTimeout(() => {
                             wrapper.style.display = 'none';
                             const staticTitle = document.getElementById('static-title-container');
