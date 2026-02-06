@@ -44,8 +44,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Radial gradient for vignette effect */
-            background: radial-gradient(circle at center, #1f2937 0%, #000000 100%);
+            background:
+                radial-gradient(120% 80% at 20% 10%, rgba(90, 136, 255, 0.28) 0%, rgba(0, 0, 0, 0) 45%),
+                radial-gradient(100% 70% at 80% 20%, rgba(105, 221, 255, 0.2) 0%, rgba(0, 0, 0, 0) 42%),
+                radial-gradient(circle at center, #1a2233 0%, #05070d 62%, #000000 100%);
+            animation: bgDrift 14s ease-in-out infinite alternate;
             z-index: -1;
         }
 
@@ -126,9 +129,56 @@
                 inset 0 0 28px rgba(189, 231, 255, 0.42);
         }
 
-        .merge-shockwave.active {
-            animation: shockwavePulse 1.35s cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
+        .merge-light-rays {
+            position: absolute;
+            inset: -20%;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 99;
+            transform: translateZ(-80px) scale(0.88);
+            filter: blur(0.5px);
+            background:
+                radial-gradient(circle at center, rgba(189, 239, 255, 0.62) 0%, rgba(141, 189, 255, 0.24) 18%, rgba(7, 14, 26, 0.0) 52%),
+                linear-gradient(112deg, rgba(126, 214, 255, 0) 0%, rgba(126, 214, 255, 0.22) 34%, rgba(255, 255, 255, 0.42) 48%, rgba(126, 214, 255, 0.2) 62%, rgba(126, 214, 255, 0) 100%),
+                linear-gradient(-112deg, rgba(92, 166, 255, 0) 0%, rgba(92, 166, 255, 0.18) 36%, rgba(198, 236, 255, 0.34) 50%, rgba(92, 166, 255, 0.16) 64%, rgba(92, 166, 255, 0) 100%);
+            mix-blend-mode: screen;
         }
+
+        .merge-light-rays::before,
+        .merge-light-rays::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        .merge-light-rays::before {
+            background:
+                radial-gradient(circle at center, rgba(182, 236, 255, 0.45) 0%, rgba(182, 236, 255, 0) 42%),
+                repeating-conic-gradient(from 0deg at 50% 50%, rgba(134, 214, 255, 0.0) 0deg, rgba(134, 214, 255, 0.34) 9deg, rgba(134, 214, 255, 0.0) 23deg);
+            filter: blur(1.2px);
+            transform: scale(0.84);
+        }
+
+        .merge-light-rays::after {
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.42) 0%, rgba(182, 236, 255, 0.25) 11%, rgba(182, 236, 255, 0.0) 28%);
+            transform: scale(0.5);
+        }
+
+        .merge-light-rays.active {
+            animation: mergeLightBurst 1.9s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        .merge-light-rays.active::before {
+            animation: raySweep 1.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        .merge-light-rays.active::after {
+            animation: haloPulse 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
         /* Static title displayed after the slat animation finishes */
         .title-plate-static {
             position: absolute;
@@ -192,36 +242,19 @@
             border-right: 1px solid rgba(255, 255, 255, 0.05);
             opacity: 0;
             backface-visibility: hidden;
-            will-change: transform, filter;
-            box-shadow:
-                inset 0 0 34px rgba(255, 255, 255, 0.08),
-                inset 0 0 110px rgba(89, 174, 255, 0.14),
-                0 18px 58px rgba(0, 0, 0, 0.42);
+            will-change: transform;
+            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.08), 0 18px 48px rgba(0, 0, 0, 0.45);
         }
 
         .slat::before {
             content: "";
             position: absolute;
-            inset: 0;
-            background: linear-gradient(125deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.02) 44%, rgba(255, 255, 255, 0));
+            inset: -10% -30%;
+            background: linear-gradient(100deg, rgba(255, 255, 255, 0.0), rgba(199, 239, 255, 0.24), rgba(255, 255, 255, 0.0));
             opacity: 0;
-            animation: slatPrism var(--slat-duration, 4.6s) ease-out forwards;
+            transform: translateX(-30%);
+            animation: slatPrism var(--slat-duration, 4.4s) ease-out forwards;
             animation-delay: var(--slat-delay, 0s);
-            mix-blend-mode: screen;
-            pointer-events: none;
-        }
-
-        .slat::after {
-            content: "";
-            position: absolute;
-            inset: -14%;
-            background: radial-gradient(circle at 34% 24%, rgba(140, 218, 255, 0.36), rgba(0, 0, 0, 0));
-            opacity: 0;
-            filter: blur(14px);
-            animation: slatFog calc(var(--slat-duration, 4.6s) * 1.2) ease-out forwards;
-            animation-delay: var(--slat-delay, 0s);
-            mix-blend-mode: screen;
-            pointer-events: none;
         }
 
         .slat-content {
@@ -350,100 +383,100 @@
         /* Removed repo-meta styling as dynamic metadata is no longer used */
 
         /* Animation keyframes for slats reveal */
-        @keyframes fullScreenReveal {
+        @keyframes bgDrift {
             0% {
-                transform: perspective(3200px) rotateY(var(--entry-angle, -78deg)) rotateX(var(--entry-tilt, 7deg)) translateZ(var(--entry-depth, -460px)) scale(0.88);
-                opacity: 0;
-                filter: brightness(0.34) saturate(0.8);
-                background-color: rgba(255, 255, 255, 0.16);
-                border-right: 1px solid rgba(255, 255, 255, 0.36);
-            }
-            36% {
-                opacity: 1;
-            }
-            66% {
-                transform: perspective(3200px) rotateY(calc(var(--entry-angle, -78deg) * -0.12)) rotateX(calc(var(--entry-tilt, 7deg) * -0.35)) translateZ(84px) scale(1.02);
-                filter: brightness(1.24) saturate(1.08);
-                background-color: rgba(255, 255, 255, 0.1);
-                border-right: 1px solid rgba(180, 228, 255, 0.24);
-            }
-            82% {
-                transform: rotateY(-2deg) rotateX(0deg) translate3d(0, 0, 24px) scaleX(1.005);
-                filter: brightness(1.08) saturate(1.08);
+                filter: saturate(1) brightness(1);
+                transform: scale(1);
             }
             100% {
-                transform: perspective(3200px) rotateY(0deg) rotateX(0deg) translateZ(0) scale(1);
+                filter: saturate(1.1) brightness(1.06);
+                transform: scale(1.03);
+            }
+        }
+
+        @keyframes fullScreenReveal {
+            0% {
+                transform: perspective(1400px) rotateY(calc(-92deg + var(--tilt, 0deg))) rotateX(6deg) translateZ(calc(-420px + var(--depth, 0px))) scaleX(0.86);
+                opacity: 0.95;
+                filter: brightness(0.36) saturate(0.8);
+                background-color: rgba(255, 255, 255, 0.16);
+                border-right: 1px solid rgba(255, 255, 255, 0.38);
+            }
+            45% {
+                transform: perspective(1400px) rotateY(calc(-8deg + var(--tilt-mid, 0deg))) rotateX(-2deg) translateZ(calc(22px + var(--depth-mid, 0px))) scaleX(1.01);
+                filter: brightness(1.24) saturate(1.15);
+            }
+            78% {
+                transform: perspective(1400px) rotateY(calc(7deg - var(--tilt-end, 0deg))) rotateX(1deg) translateZ(58px) scaleX(1.015);
+                filter: brightness(1.08) saturate(1.1);
+            }
+            100% {
+                transform: rotateY(0deg) rotateX(0deg) translateZ(0) scaleX(1);
                 opacity: 1;
-                filter: brightness(1) saturate(1);
+                filter: brightness(1) saturate(1.02);
                 background-color: rgba(255, 255, 255, 0.05);
                 border-right: 1px solid rgba(255, 255, 255, 0.05);
             }
         }
 
-        @keyframes auroraFlow {
+        @keyframes slatPrism {
             0% {
-                transform: translate3d(-1.5%, -2%, -120px) scale(0.98) rotate(-2deg);
-                filter: blur(34px) saturate(1.05);
+                opacity: 0;
+                transform: translateX(-40%) scaleX(0.9);
+            }
+            55% {
+                opacity: 0.44;
             }
             100% {
-                transform: translate3d(2.5%, 1%, -80px) scale(1.06) rotate(3deg);
-                filter: blur(42px) saturate(1.2);
+                opacity: 0;
+                transform: translateX(40%) scaleX(1.06);
             }
         }
 
         @keyframes mergeLightBurst {
             0% {
                 opacity: 0;
-                transform: translateZ(-90px) scale(0.88) rotate(0deg);
-                filter: blur(2px) saturate(1.35);
-            }
-            18% {
-                opacity: 0.92;
-                transform: translateZ(-40px) scale(1.02) rotate(4deg);
-            }
-            44% {
-                opacity: 0.62;
-                transform: translateZ(-8px) scale(1.08) rotate(8deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translateZ(20px) scale(1.2) rotate(14deg);
-                filter: blur(3px) saturate(1.05);
-            }
-        }
-
-        @keyframes shockwavePulse {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.44);
+                transform: translateZ(-80px) scale(0.88) rotate(-3deg);
             }
             24% {
-                opacity: 0.75;
+                opacity: 0.88;
+                transform: translateZ(-10px) scale(1.03) rotate(2deg);
+            }
+            60% {
+                opacity: 0.24;
+                transform: translateZ(28px) scale(1.11) rotate(7deg);
             }
             100% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(1.22);
+                transform: translateZ(45px) scale(1.18) rotate(10deg);
             }
         }
 
-        @keyframes slatPrism {
-            0% { opacity: 0; }
-            54% { opacity: 0.28; }
-            100% { opacity: 0.08; }
-        }
-
-        @keyframes slatFog {
+        @keyframes raySweep {
             0% {
                 opacity: 0;
-                transform: translateZ(30px) scale(0.95);
+                transform: scale(0.84) rotate(0deg);
             }
-            64% {
-                opacity: 0.34;
-                transform: translateZ(90px) scale(1.04);
+            35% {
+                opacity: 0.82;
             }
             100% {
-                opacity: 0.1;
-                transform: translateZ(110px) scale(1.08);
+                opacity: 0;
+                transform: scale(1.25) rotate(18deg);
+            }
+        }
+
+        @keyframes haloPulse {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            25% {
+                opacity: 0.95;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.5);
             }
         }
 
@@ -485,9 +518,7 @@
     <div class="container">
         <!-- 3D title reveal stage -->
         <div class="full-screen-3d-stage">
-            <div class="stage-aurora" aria-hidden="true"></div>
             <div id="merge-light-rays" class="merge-light-rays" aria-hidden="true"></div>
-            <div id="merge-shockwave" class="merge-shockwave" aria-hidden="true"></div>
             <div class="title-plate-wrapper"><!-- slats inserted here via JS --></div>
             <div id="static-title-container" class="title-plate-static">
                 <h1 class="plate-main-text">ADVANCED AI SYSTEM</h1>
@@ -559,13 +590,12 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             /* Configuration for slat animation */
-            const NUM_SLATS = 18;
+            const NUM_SLATS = 22; // denser segmentation for smoother fusion
             const ANIMATION_DURATION = 4.4;
-            const STAGGER_DELAY = 0.12;
+            const STAGGER_DELAY = 0.11;
             function createFullScreenSlats() {
                 const wrapper = document.querySelector('.title-plate-wrapper');
                 const lightRays = document.getElementById('merge-light-rays');
-                const shockwave = document.getElementById('merge-shockwave');
                 const titleTextSource = document.querySelector('#static-title-container .plate-main-text').outerHTML;
                 wrapper.innerHTML = '';
                 buildMergeParticles(particles);
@@ -579,13 +609,16 @@
                     slat.style.position = 'absolute';
                     slat.style.left = `${i * slatWidth}px`;
                     slat.style.zIndex = 100 + i;
-                    slat.style.setProperty('--slat-delay', `${i * STAGGER_DELAY}s`);
+                    const centerBias = (i / (NUM_SLATS - 1)) - 0.5;
+                    const tilt = centerBias * 14;
+                    const depth = Math.abs(centerBias) * -120;
+                    slat.style.setProperty('--tilt', `${tilt.toFixed(2)}deg`);
+                    slat.style.setProperty('--depth', `${depth.toFixed(2)}px`);
+                    slat.style.setProperty('--tilt-mid', `${(tilt * 0.35).toFixed(2)}deg`);
+                    slat.style.setProperty('--tilt-end', `${(Math.abs(tilt) * 0.2).toFixed(2)}deg`);
+                    slat.style.setProperty('--depth-mid', `${(depth * 0.24).toFixed(2)}px`);
+                    slat.style.setProperty('--slat-delay', `${(i * STAGGER_DELAY).toFixed(3)}s`);
                     slat.style.setProperty('--slat-duration', `${ANIMATION_DURATION}s`);
-                    const side = i < (NUM_SLATS / 2) ? -1 : 1;
-                    const centerOffset = (i - (NUM_SLATS - 1) / 2) / NUM_SLATS;
-                    slat.style.setProperty('--entry-angle', `${side * (68 + Math.abs(centerOffset) * 22)}deg`);
-                    slat.style.setProperty('--entry-tilt', `${(Math.random() * 6 + 2).toFixed(2)}deg`);
-                    slat.style.setProperty('--entry-depth', `${(-420 - Math.random() * 220).toFixed(0)}px`);
                     const content = document.createElement('div');
                     content.classList.add('slat-content');
                     content.innerHTML = titleTextSource;
@@ -599,14 +632,11 @@
 
                     if (i === NUM_SLATS - 1) {
                         const totalTime = (ANIMATION_DURATION + (i * STAGGER_DELAY)) * 1000;
-                        const burstStartTime = Math.max(totalTime - 420, 0);
+                        const burstStartTime = Math.max(totalTime - 260, 0);
                         setTimeout(() => {
                             lightRays.classList.remove('active');
-                            shockwave.classList.remove('active');
                             void lightRays.offsetWidth;
-                            void shockwave.offsetWidth;
                             lightRays.classList.add('active');
-                            shockwave.classList.add('active');
                         }, burstStartTime);
                         setTimeout(() => {
                             wrapper.style.display = 'none';
