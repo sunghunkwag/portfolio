@@ -44,14 +44,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Radial gradient for vignette effect */
-            background: radial-gradient(circle at center, #1f2937 0%, #000000 100%);
+            background:
+                radial-gradient(120% 80% at 20% 10%, rgba(90, 136, 255, 0.28) 0%, rgba(0, 0, 0, 0) 45%),
+                radial-gradient(100% 70% at 80% 20%, rgba(105, 221, 255, 0.2) 0%, rgba(0, 0, 0, 0) 42%),
+                radial-gradient(circle at center, #1a2233 0%, #05070d 62%, #000000 100%);
+            animation: bgDrift 14s ease-in-out infinite alternate;
             z-index: -1;
         }
 
         /* 3D Perspective Container */
         .full-screen-3d-stage {
-            perspective: 3000px;
+            perspective: 4200px;
+            perspective-origin: 50% 24%;
             width: 100vw;
             height: 100vh;
             overflow: hidden;
@@ -60,6 +64,7 @@
             left: 0;
             z-index: 100;
             pointer-events: none; /* allow underlying elements to be clickable */
+            transform-style: preserve-3d;
         }
 
         .title-plate-wrapper {
@@ -215,9 +220,10 @@
             color: #ffffff;
             font-family: 'Montserrat', sans-serif;
             white-space: nowrap;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.17) 0%, rgba(5, 10, 24, 0.88) 100%);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+            transform: translateZ(110px);
         }
 
         /* Main container for name and projects */
@@ -328,6 +334,17 @@
         /* Removed repo-meta styling as dynamic metadata is no longer used */
 
         /* Animation keyframes for slats reveal */
+        @keyframes bgDrift {
+            0% {
+                filter: saturate(1) brightness(1);
+                transform: scale(1);
+            }
+            100% {
+                filter: saturate(1.1) brightness(1.06);
+                transform: scale(1.03);
+            }
+        }
+
         @keyframes fullScreenReveal {
             0% {
                 transform: rotateY(calc(-96deg + var(--tilt-y, 0deg))) rotateX(var(--tilt-x, 0deg)) translateZ(calc(-360px - var(--depth, 0px))) scaleX(0.93);
@@ -538,16 +555,28 @@
                 const mergeAura = document.getElementById('merge-aura');
                 const mergeRings = document.getElementById('merge-rings');
                 const titleTextSource = document.querySelector('#static-title-container .plate-main-text').outerHTML;
-                wrapper.innerHTML = "";
+                wrapper.innerHTML = '';
+                buildMergeParticles(particles);
+
                 const screenWidth = window.innerWidth;
                 const slatWidth = screenWidth / NUM_SLATS;
                 for (let i = 0; i < NUM_SLATS; i++) {
                     const slat = document.createElement('div');
                     slat.classList.add('slat');
                     slat.style.width = `${slatWidth}px`;
-                    slat.style.position = "absolute";
+                    slat.style.position = 'absolute';
                     slat.style.left = `${i * slatWidth}px`;
                     slat.style.zIndex = 100 + i;
+                    const centerBias = (i / (NUM_SLATS - 1)) - 0.5;
+                    const tilt = centerBias * 14;
+                    const depth = Math.abs(centerBias) * -120;
+                    slat.style.setProperty('--tilt', `${tilt.toFixed(2)}deg`);
+                    slat.style.setProperty('--depth', `${depth.toFixed(2)}px`);
+                    slat.style.setProperty('--tilt-mid', `${(tilt * 0.35).toFixed(2)}deg`);
+                    slat.style.setProperty('--tilt-end', `${(Math.abs(tilt) * 0.2).toFixed(2)}deg`);
+                    slat.style.setProperty('--depth-mid', `${(depth * 0.24).toFixed(2)}px`);
+                    slat.style.setProperty('--slat-delay', `${(i * STAGGER_DELAY).toFixed(3)}s`);
+                    slat.style.setProperty('--slat-duration', `${ANIMATION_DURATION}s`);
                     const content = document.createElement('div');
                     content.classList.add('slat-content');
                     content.innerHTML = titleTextSource;
@@ -563,6 +592,7 @@
                     slat.style.setProperty('--depth', `${Math.abs(spread) * 120}px`);
                     slat.style.animation = `fullScreenReveal ${ANIMATION_DURATION}s cubic-bezier(0.22, 1, 0.36, 1) forwards`;
                     slat.style.animationDelay = `${i * STAGGER_DELAY}s`;
+
                     if (i === NUM_SLATS - 1) {
                         const totalTime = (ANIMATION_DURATION + (i * STAGGER_DELAY)) * 1000;
                         const burstStartTime = Math.max(totalTime - 560, 0);
