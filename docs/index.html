@@ -73,6 +73,24 @@
             pointer-events: none;
         }
 
+        .merge-light-rays {
+            position: absolute;
+            inset: -25%;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 99;
+            transform: translateZ(-120px) scale(0.92);
+            filter: blur(1px);
+            background:
+                radial-gradient(circle at center, rgba(160, 232, 255, 0.45) 0%, rgba(95, 168, 255, 0.12) 28%, rgba(0, 0, 0, 0) 58%),
+                conic-gradient(from 10deg at 50% 50%, rgba(143, 214, 255, 0.00) 0deg, rgba(143, 214, 255, 0.32) 30deg, rgba(143, 214, 255, 0.02) 65deg, rgba(88, 166, 255, 0.28) 120deg, rgba(88, 166, 255, 0.0) 165deg, rgba(143, 214, 255, 0.24) 218deg, rgba(143, 214, 255, 0.02) 255deg, rgba(88, 166, 255, 0.28) 300deg, rgba(143, 214, 255, 0.00) 360deg);
+            mix-blend-mode: screen;
+        }
+
+        .merge-light-rays.active {
+            animation: mergeLightBurst 1.7s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
         /* Static title displayed after the slat animation finishes */
         .title-plate-static {
             position: absolute;
@@ -288,6 +306,25 @@
             }
         }
 
+        @keyframes mergeLightBurst {
+            0% {
+                opacity: 0;
+                transform: translateZ(-120px) scale(0.92) rotate(0deg);
+            }
+            20% {
+                opacity: 0.9;
+                transform: translateZ(-40px) scale(1.05) rotate(6deg);
+            }
+            55% {
+                opacity: 0.35;
+                transform: translateZ(-20px) scale(1.12) rotate(12deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateZ(0px) scale(1.18) rotate(16deg);
+            }
+        }
+
         /* Fade utilities */
         .fade-in-2 {
             opacity: 0;
@@ -326,6 +363,7 @@
     <div class="container">
         <!-- 3D title reveal stage -->
         <div class="full-screen-3d-stage">
+            <div id="merge-light-rays" class="merge-light-rays" aria-hidden="true"></div>
             <div class="title-plate-wrapper"><!-- slats inserted here via JS --></div>
             <div id="static-title-container" class="title-plate-static">
                 <h1 class="plate-main-text">ADVANCED AI SYSTEM</h1>
@@ -359,12 +397,12 @@
                     <a href="https://github.com/sunghunkwag/Advanced-AI-Meta-Cognition-System" target="_blank">View on GitHub &rarr;</a>
                 </div>
             </div>
-            <div class="glass-card" onclick="window.open('https://github.com/sunghunkwag/AI-Research-Nexus', '_blank')">
-                <h3>AI-Research-Nexus</h3>
-                <p>Runtime code modification framework for recursive self‑improvement and evolutionary adaptation.</p>
+            <div class="glass-card" onclick="window.open('https://github.com/sunghunkwag/heterogeneous-agent-swarm', '_blank')">
+                <h3>Heterogeneous Agent Swarm</h3>
+                <p>Multi-agent orchestration framework for heterogeneous AI teams collaborating on complex research tasks.</p>
                 <!-- metadata placeholder removed -->
                 <div class="repo-link">
-                    <a href="https://github.com/sunghunkwag/AI-Research-Nexus" target="_blank">View on GitHub &rarr;</a>
+                    <a href="https://github.com/sunghunkwag/heterogeneous-agent-swarm" target="_blank">View on GitHub &rarr;</a>
                 </div>
             </div>
             <div class="glass-card" onclick="window.open('https://github.com/sunghunkwag/SSM-MetaRL-TestCompute', '_blank')">
@@ -402,6 +440,7 @@
             const STAGGER_DELAY = 0.15;
             function createFullScreenSlats() {
                 const wrapper = document.querySelector('.title-plate-wrapper');
+                const lightRays = document.getElementById('merge-light-rays');
                 const titleTextSource = document.querySelector('#static-title-container .plate-main-text').outerHTML;
                 wrapper.innerHTML = "";
                 const screenWidth = window.innerWidth;
@@ -424,6 +463,12 @@
                     slat.style.animationDelay = `${i * STAGGER_DELAY}s`;
                     if (i === NUM_SLATS - 1) {
                         const totalTime = (ANIMATION_DURATION + (i * STAGGER_DELAY)) * 1000;
+                        const burstStartTime = Math.max(totalTime - 420, 0);
+                        setTimeout(() => {
+                            lightRays.classList.remove('active');
+                            void lightRays.offsetWidth;
+                            lightRays.classList.add('active');
+                        }, burstStartTime);
                         setTimeout(() => {
                             wrapper.style.display = 'none';
                             const staticTitle = document.getElementById('static-title-container');
