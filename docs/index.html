@@ -51,7 +51,8 @@
 
         /* 3D Perspective Container */
         .full-screen-3d-stage {
-            perspective: 3000px;
+            perspective: 4200px;
+            perspective-origin: 50% 24%;
             width: 100vw;
             height: 100vh;
             overflow: hidden;
@@ -60,6 +61,7 @@
             left: 0;
             z-index: 100;
             pointer-events: none; /* allow underlying elements to be clickable */
+            transform-style: preserve-3d;
         }
 
         .title-plate-wrapper {
@@ -363,7 +365,11 @@
                 transform: perspective(3200px) rotateY(calc(var(--entry-angle, -78deg) * -0.12)) rotateX(calc(var(--entry-tilt, 7deg) * -0.35)) translateZ(84px) scale(1.02);
                 filter: brightness(1.24) saturate(1.08);
                 background-color: rgba(255, 255, 255, 0.1);
-                border-right: 1px solid rgba(255, 255, 255, 0.2);
+                border-right: 1px solid rgba(180, 228, 255, 0.24);
+            }
+            82% {
+                transform: rotateY(-2deg) rotateX(0deg) translate3d(0, 0, 24px) scaleX(1.005);
+                filter: brightness(1.08) saturate(1.08);
             }
             100% {
                 transform: perspective(3200px) rotateY(0deg) rotateX(0deg) translateZ(0) scale(1);
@@ -561,14 +567,16 @@
                 const lightRays = document.getElementById('merge-light-rays');
                 const shockwave = document.getElementById('merge-shockwave');
                 const titleTextSource = document.querySelector('#static-title-container .plate-main-text').outerHTML;
-                wrapper.innerHTML = "";
+                wrapper.innerHTML = '';
+                buildMergeParticles(particles);
+
                 const screenWidth = window.innerWidth;
                 const slatWidth = screenWidth / NUM_SLATS;
                 for (let i = 0; i < NUM_SLATS; i++) {
                     const slat = document.createElement('div');
                     slat.classList.add('slat');
                     slat.style.width = `${slatWidth}px`;
-                    slat.style.position = "absolute";
+                    slat.style.position = 'absolute';
                     slat.style.left = `${i * slatWidth}px`;
                     slat.style.zIndex = 100 + i;
                     slat.style.setProperty('--slat-delay', `${i * STAGGER_DELAY}s`);
@@ -585,8 +593,10 @@
                     content.style.left = `-${i * slatWidth}px`;
                     slat.appendChild(content);
                     wrapper.appendChild(slat);
-                    slat.style.animation = `fullScreenReveal ${ANIMATION_DURATION}s cubic-bezier(0.25, 1, 0.5, 1) forwards`;
+
+                    slat.style.animation = `fullScreenRevealAdvanced ${ANIMATION_DURATION}s cubic-bezier(0.2, 0.95, 0.2, 1) forwards`;
                     slat.style.animationDelay = `${i * STAGGER_DELAY}s`;
+
                     if (i === NUM_SLATS - 1) {
                         const totalTime = (ANIMATION_DURATION + (i * STAGGER_DELAY)) * 1000;
                         const burstStartTime = Math.max(totalTime - 420, 0);
