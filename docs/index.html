@@ -701,27 +701,23 @@
                     const tilt = centerBias * 14;
                     const depth = Math.abs(centerBias) * -120;
                     slat.style.setProperty('--tilt', `${tilt.toFixed(2)}deg`);
-                    slat.style.setProperty('--depth', `${depth.toFixed(2)}px`);
                     slat.style.setProperty('--tilt-mid', `${(tilt * 0.35).toFixed(2)}deg`);
                     slat.style.setProperty('--tilt-end', `${(Math.abs(tilt) * 0.2).toFixed(2)}deg`);
                     slat.style.setProperty('--depth-mid', `${(depth * 0.24).toFixed(2)}px`);
-                    slat.style.setProperty('--slat-delay', `${(i * STAGGER_DELAY).toFixed(3)}s`);
-                    slat.style.setProperty('--slat-duration', `${ANIMATION_DURATION}s`);
                     const content = document.createElement('div');
                     content.classList.add('slat-content');
                     content.innerHTML = titleTextSource;
                     content.style.width = `${screenWidth}px`;
                     content.style.left = `-${i * slatWidth}px`;
                     slat.appendChild(content);
-                    wrapper.appendChild(slat);
                     slat.style.setProperty('--slat-delay', `${i * STAGGER_DELAY}s`);
                     slat.style.setProperty('--slat-duration', `${ANIMATION_DURATION}s`);
-                    const spread = (i / (NUM_SLATS - 1)) - 0.5;
-                    slat.style.setProperty('--tilt-y', `${spread * 16}deg`);
+                    slat.style.setProperty('--tilt-y', `${centerBias * 16}deg`);
                     slat.style.setProperty('--tilt-x', `${Math.cos(i * 0.68) * 8}deg`);
-                    slat.style.setProperty('--depth', `${Math.abs(spread) * 120}px`);
+                    slat.style.setProperty('--depth', `${Math.abs(centerBias) * 120}px`);
                     slat.style.animation = `fullScreenReveal ${ANIMATION_DURATION}s cubic-bezier(0.22, 1, 0.36, 1) forwards`;
                     slat.style.animationDelay = `${i * STAGGER_DELAY}s`;
+                    wrapper.appendChild(slat);
 
                     if (i === NUM_SLATS - 1) {
                         const totalTime = (ANIMATION_DURATION + (i * STAGGER_DELAY)) * 1000;
