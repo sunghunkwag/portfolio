@@ -1,5 +1,6 @@
 # Python scripts
 *.py
+!tests/*.py
 __pycache__/
 
 # Large/Raw Video Files (Keep background.mp4 but ignore others)
