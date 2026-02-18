@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sung Hun Kwag - Advanced AI Research Portfolio</title>
+
+    <!-- SEO & Social metadata for richer previews -->
+    <meta name="description"
+        content="Portfolio of Sung Hun Kwag showcasing advanced AI research projects and open-source contributions." />
+    <meta property="og:title" content="Sung Hun Kwag - Advanced AI Research Portfolio" />
+    <meta property="og:description"
+        content="Explore cutting-edge AI projects ranging from state-space models to recursive self-improvement." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://sunghunkwag.github.io/portfolio/preview.png" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Inline styles for a sleek, glassmorphic aesthetic -->
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            /* Enable scrolling */
+            min-height: 100vh;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            /* Align to top so content grows down */
+        }
+
+        /* Background Neutral */
+        .bg-neutral {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Radial gradient for vignette effect */
+            background: radial-gradient(circle at center, #1f2937 0%, #000000 100%);
+            z-index: -1;
+        }
+
+        /* 3D Perspective Container */
+        /* 3D Perspective Container */
+        .full-screen-3d-stage {
+            perspective: 3000px;
+
+            /* Full Screen - No black bars */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+
+            overflow: hidden;
+            z-index: 100;
+            pointer-events: none;
+            /* allow underlying elements to be clickable */
+
+            container-type: size;
+        }
+
+        .title-plate-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            display: flex;
+            pointer-events: none;
+        }
+
+        /* Static title displayed after the slat animation finishes */
+        .title-plate-static {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Cover full screen for alignment, but pointer-events: none allows clicks */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding-top: 35vh;
+            /* Safe vertical position */
+            /* Matches slat animation end position relative to container */
+            z-index: 101;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .title-plate-static.sequence-active {
+            animation: singleSequenceFade 8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        /* Unified sequence for the static title -> holds then stays visible */
+        @keyframes singleSequenceFade {
+            0% {
+                opacity: 1;
+                filter: blur(0px);
+                transform: scale(1);
+                letter-spacing: -2px;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 1;
+                text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+                letter-spacing: -2px;
+            }
+        }
+
+        /* Title typography */
+        .plate-main-text {
+            font-size: clamp(2.5rem, 5vw, 6rem);
+            font-weight: 900;
+            /* Extra bold for impact */
+            font-family: 'Orbitron', sans-serif;
+            /* AI / Sci-Fi Font */
+            /* text-transform: uppercase; removed for mixed case */
+            letter-spacing: 4px;
+            /* Premium wide spacing */
+            line-height: 1;
+            margin: 0;
+
+            /* Transparent / Glass / Wireframe Style */
+            color: transparent;
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9);
+            /* Crisp White Outline */
+            background: none;
+            text-shadow: none;
+            filter: none;
+        }
+
+        /* Slat styles */
+        .slat {
+            height: 100%;
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            clip-path: inset(0px);
+            transform-style: flat;
+            transform-origin: left center;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            backface-visibility: hidden;
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        .slat-content {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding-top: 35vh;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        /* Main container for name and projects */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 1200px;
+            min-height: 100vh;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            /* Stack from top */
+            padding-top: 65vh;
+            /* Ensure content starts below the fixed title */
+            padding-bottom: 50px;
+            pointer-events: none;
+        }
+
+        /* Hero section containing the name */
+        #hero {
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 20px 0;
+            margin: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .name-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0;
+            z-index: 201;
+        }
+
+        .eng-name,
+        .kor-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            font-size: 1.25rem;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: none;
+        }
+
+        .separator {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.75rem;
+            text-shadow: none;
+        }
+
+        /* Projects section */
+        #projects {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding-bottom: 50px;
+            z-index: 200;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        /* Card styling */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            width: 280px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-card h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+            /* Neon glow */
+        }
+
+        .glass-card p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+        }
+
+        .repo-link a {
+            text-decoration: none;
+            color: #4facfe;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .repo-link a:hover {
+            color: #00f2fe;
+        }
+
+        /* Removed repo-meta styling as dynamic metadata is no longer used */
+
+        /* Animation keyframes for slats reveal */
+        @keyframes fullScreenReveal {
+
+            /* Enhanced 3D reveal with depth and overshoot for a premium feel */
+            0% {
+                transform: rotateY(-90deg) translateZ(-300px);
+                opacity: 1;
+                filter: brightness(0.4);
+                background-color: rgba(255, 255, 255, 0.15);
+                border-right: 1px solid rgba(255, 255, 255, 0.4);
+            }
+
+            70% {
+                transform: rotateY(10deg) translateZ(40px);
+                filter: brightness(1.2);
+                background-color: rgba(255, 255, 255, 0.1);
+                border-right: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            100% {
+                transform: rotateY(0deg) translateZ(0);
+                opacity: 1;
+                filter: brightness(1);
+                background-color: rgba(255, 255, 255, 0.05);
+                border-right: 1px solid rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        /* Fade utilities */
+        .fade-in-2 {
+            opacity: 0;
+            animation: fadeInUp 1.5s ease-out forwards;
+            animation-delay: 3.5s;
+        }
+
+        .fade-in-3 {
+            opacity: 0;
+            animation: fadeInUp 1.5s ease-out forwards;
+            animation-delay: 4.5s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 768px) {
+            .plate-main-text {
+                font-size: 2.5rem;
+            }
+
+            .glass-card {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Dark backdrop -->
+    <div class="bg-neutral" aria-hidden="true"></div>
+    <!-- Main content -->
+    <!-- 3D title reveal stage (Moved out of container for full screen) -->
+    <div class="full-screen-3d-stage">
+        <div class="title-plate-wrapper"><!-- slats inserted here via JS --></div>
+        <div id="static-title-container" class="title-plate-static">
+            <h1 class="plate-main-text">Intelligence Research</h1>
+        </div>
+    </div>
+    <div class="container" style="padding-top: 65vh;">
+        <!-- 3D title reveal stage -->
+
+
+        <!-- Name under the title (Removed spacer, using padding-top on container) -->
+        <!-- Portfolio cards -->
+        <section id="projects" class="fade-in-3">
+            <!-- Each card includes a repo-meta placeholder updated via JS -->
+            <div class="glass-card" onclick="window.open('https://github.com/sunghunkwag/DHC-SSM-Enhanced', '_blank')">
+                <h3>DHC-SSM-Enhanced</h3>
+                <!-- REVISED: emphasizing exploration and failure modes -->
+                <p>Exploratory O(n) implementation. Testing whether effectiveness scales in deep hierarchies or succumbs
+                    to numerical instability.</p>
+                <!-- metadata placeholder removed -->
+                <div class="repo-link">
+                    <a href="https://github.com/sunghunkwag/DHC-SSM-Enhanced" target="_blank">View on GitHub &rarr;</a>
+                </div>
+            </div>
+            <div class="glass-card"
+                onclick="window.open('https://github.com/sunghunkwag/Advanced-AI-Meta-Cognition-System', '_blank')">
+                <h3>Meta-Cognition System</h3>
+                <!-- REVISED: removed startup tone, acknowledged uncertainty -->
+                <p>Experimental architecture simulating chemical modulation. It is unclear if this adds reasoning depth
+                    or merely stochastic noise.</p>
+                <!-- metadata placeholder removed -->
+                <div class="repo-link">
+                    <a href="https://github.com/sunghunkwag/Advanced-AI-Meta-Cognition-System" target="_blank">View on
+                        GitHub &rarr;</a>
+                </div>
+            </div>
+            <div class="glass-card"
+                onclick="window.open('https://github.com/sunghunkwag/Neural-Symbolic-Reasoning-Framework', '_blank')">
+                <h3>Neural-Symbolic Reasoning Framework</h3>
+                <p>Unified framework for neural-symbolic integration, leveraging MCTS and logic synthesis for advanced
+                    reasoning.</p>
+                <!-- metadata placeholder removed -->
+                <div class="repo-link">
+                    <a href="https://github.com/sunghunkwag/Neural-Symbolic-Reasoning-Framework" target="_blank">View on
+                        GitHub &rarr;</a>
+                </div>
+            </div>
+            <div class="glass-card"
+                onclick="window.open('https://github.com/sunghunkwag/SSM-MetaRL-TestCompute', '_blank')">
+                <h3>SSM-MetaRL Check</h3>
+                <p>Unified Meta‑RL benchmark for state‑space models (SSM) with automated adaptation pipelines.</p>
+                <!-- metadata placeholder removed -->
+                <div class="repo-link">
+                    <a href="https://github.com/sunghunkwag/SSM-MetaRL-TestCompute" target="_blank">View on GitHub
+                        &rarr;</a>
+                </div>
+            </div>
+            <div class="glass-card"
+                onclick="window.open('https://github.com/sunghunkwag/Tri-Neuro-Hybrid-Architecture', '_blank')">
+                <h3>Tri-Neuro Hybrid Arch</h3>
+                <!-- REVISED: removed 'next-gen', highlighted integration costs -->
+                <p>Attempts to integrate disparate neural paradigms. The integration cost often outweighs individual
+                    module benefits.</p>
+                <!-- metadata placeholder removed -->
+                <div class="repo-link">
+                    <a href="https://github.com/sunghunkwag/Tri-Neuro-Hybrid-Architecture" target="_blank">View on
+                        GitHub &rarr;</a>
+                </div>
+            </div>
+            <div class="glass-card"
+                onclick="window.open('https://github.com/sunghunkwag/ast-grammar-induction-prototype', '_blank')">
+                <h3>ast-grammar-induction-prototype</h3>
+                <p>Single‑file recursive self‑improvement engine evolving Python programs via AST analysis.</p>
+                <!-- metadata placeholder removed -->
+                <div class="repo-link">
+                    <a href="https://github.com/sunghunkwag/ast-grammar-induction-prototype" target="_blank">View on
+                        GitHub &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Name at bottom -->
+        <header id="hero" class="fade-in-2">
+            <div class="name-container">
+                <h2 class="eng-name">Sung Hun Kwag</h2>
+                <span class="separator">|</span>
+                <h2 class="kor-name">곽성훈</h2>
+            </div>
+        </header>
+    </div>
+    <!-- JavaScript: build slats and fetch repo metadata -->
+    <script>
+        window.addEventListener('load', () => {
+            /* Configuration for slat animation */
+            const NUM_SLATS = 16; // increased number of slats for a smoother reveal
+            const ANIMATION_DURATION = 4.0;
+            const STAGGER_DELAY = 0.15;
+            function createFullScreenSlats() {
+                const wrapper = document.querySelector('.title-plate-wrapper');
+                const titleTextSource = document.querySelector('#static-title-container .plate-main-text').outerHTML;
+                wrapper.innerHTML = "";
+                // Use getBoundingClientRect for precise rendered width
+                const screenWidth = wrapper.getBoundingClientRect().width;
+                const slatWidth = screenWidth / NUM_SLATS;
+                for (let i = 0; i < NUM_SLATS; i++) {
+                    const slat = document.createElement('div');
+                    slat.classList.add('slat');
+                    slat.style.width = `${slatWidth}px`;
+                    slat.style.position = "absolute";
+                    slat.style.left = `${i * slatWidth}px`;
+                    slat.style.zIndex = 100 + i;
+                    const content = document.createElement('div');
+                    content.classList.add('slat-content');
+                    content.innerHTML = titleTextSource;
+                    content.style.width = `${screenWidth}px`;
+                    content.style.left = `-${i * slatWidth}px`;
+                    slat.appendChild(content);
+                    wrapper.appendChild(slat);
+                    slat.style.animation = `fullScreenReveal ${ANIMATION_DURATION}s cubic-bezier(0.25, 1, 0.5, 1) forwards`;
+                    slat.style.animationDelay = `${i * STAGGER_DELAY}s`;
+                    if (i === NUM_SLATS - 1) {
+                        const totalTime = (ANIMATION_DURATION + (i * STAGGER_DELAY)) * 1000;
+                        setTimeout(() => {
+                            wrapper.style.display = 'none';
+                            const staticTitle = document.getElementById('static-title-container');
+                            staticTitle.classList.add('sequence-active');
+                        }, totalTime);
+                    }
+                }
+            }
+            // Initiate slats immediately on load
+            createFullScreenSlats();
+            // Dynamic metadata fetching has been removed for a cleaner presentation.
+        });
+    </script>
+</body>
+
+</html>
